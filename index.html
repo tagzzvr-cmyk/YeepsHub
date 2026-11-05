@@ -7,882 +7,914 @@
 <title>YeepsHub | Everything Yeeps</title>
 
 <style>
-:root {
-  --bg: #eef5ff;
-  --panel: rgba(255,255,255,.88);
-  --panel2: #e4efff;
-  --text: #172b49;
-  --muted: #6b7e9a;
-  --border: rgba(65,115,180,.17);
-  --accent: #3985ff;
-  --shadow: 0 12px 35px rgba(38,85,145,.12);
+*{box-sizing:border-box}
+:root{
+ --panel:rgba(15,22,48,.88);
+ --panel2:rgba(27,39,76,.94);
+ --text:#fff;
+ --muted:#c2cbe0;
+ --accent:#64d9ed;
+ --border:rgba(255,255,255,.17);
+}
+body{
+ margin:0;
+ min-height:100vh;
+ font-family:Arial,Helvetica,sans-serif;
+ color:var(--text);
+ background:#10152c;
+}
+body:before{
+ content:"";
+ position:fixed;
+ inset:0;
+ z-index:-2;
+ background:
+ linear-gradient(120deg,rgba(5,8,27,.52),rgba(5,8,27,.20)),
+ url("yeephub-dark.png") center/cover fixed;
+}
+body.light{
+ --panel:rgba(255,255,255,.88);
+ --panel2:rgba(241,248,255,.96);
+ --text:#26364c;
+ --muted:#52677e;
+ --accent:#2679cf;
+ --border:rgba(30,60,90,.17);
+ background:#dceafa;
+}
+body.light:before{
+ background:
+ linear-gradient(120deg,rgba(225,240,255,.12),rgba(225,240,255,.04)),
+ url("yeephub-light.png") center/cover fixed;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+
+header{
+ position:sticky;
+ top:0;
+ z-index:10;
+ display:flex;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:12px;
+ padding:13px 3%;
+ background:var(--panel);
+ backdrop-filter:blur(16px);
+ border-bottom:1px solid var(--border);
+}
+.brand{
+ font-size:24px;
+ font-weight:950;
+ white-space:nowrap;
+}
+.brand span{color:var(--accent)}
+nav{
+ display:flex;
+ gap:4px;
+ flex:1;
+ overflow-x:auto;
+}
+nav button{
+ border:0;
+ background:transparent;
+ color:var(--muted);
+ padding:10px;
+ border-radius:10px;
+ font-weight:bold;
+ white-space:nowrap;
+}
+nav button:hover,nav button.active{
+ background:var(--panel2);
+ color:var(--text);
+}
+.top-actions{display:flex;gap:8px}
+.top-actions button{
+ border:1px solid var(--border);
+ border-radius:10px;
+ padding:10px 12px;
+ color:var(--text);
+ background:var(--panel2);
+ font-weight:bold;
+}
+#ownerBtn{
+ background:linear-gradient(135deg,#567cff,#925df3);
+ color:white;
+ border:0;
 }
 
-body.dark {
-  --bg: #091323;
-  --panel: rgba(19,35,58,.94);
-  --panel2: #172a46;
-  --text: #edf5ff;
-  --muted: #9db1ce;
-  --border: rgba(150,190,255,.13);
-  --accent: #64a6ff;
-  --shadow: 0 12px 35px rgba(0,0,0,.25);
+main{
+ width:min(1180px,93%);
+ margin:32px auto;
+}
+.panel{
+ background:var(--panel);
+ border:1px solid var(--border);
+ border-radius:22px;
+ padding:25px;
+ backdrop-filter:blur(15px);
+ box-shadow:0 15px 40px #0002;
+}
+.hero{
+ display:grid;
+ grid-template-columns:1.4fr .8fr;
+ gap:18px;
+}
+.eyebrow{
+ color:var(--accent);
+ font-size:11px;
+ font-weight:900;
+ letter-spacing:2px;
+}
+h1{
+ font-size:clamp(38px,6vw,67px);
+ line-height:1;
+ margin:15px 0;
+ letter-spacing:-2px;
+}
+h1 span{color:var(--accent)}
+.hero p{
+ color:var(--muted);
+ line-height:1.7;
+}
+.stats{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ margin-top:22px;
+}
+.stat{
+ background:var(--panel2);
+ border:1px solid var(--border);
+ border-radius:15px;
+ padding:16px;
+}
+.stat strong{
+ display:block;
+ font-size:28px;
+}
+.stat small{color:var(--muted)}
+
+.searchrow{
+ display:flex;
+ gap:10px;
+ margin:25px 0;
+}
+#search{
+ flex:1;
+ min-width:0;
+ padding:15px;
+ border-radius:13px;
+ border:1px solid var(--border);
+ background:var(--panel);
+ color:var(--text);
+ outline:none;
+}
+#search::placeholder{color:var(--muted)}
+
+.section-title{margin:30px 0 14px}
+.section-title h2{margin:0}
+.section-title p{
+ color:var(--muted);
+ font-size:13px;
+}
+.roles{
+ display:grid;
+ grid-template-columns:repeat(6,1fr);
+ gap:10px;
+}
+.role-card{
+ background:var(--panel);
+ color:var(--text);
+ border:1px solid var(--border);
+ border-radius:17px;
+ padding:15px 8px;
+ min-height:105px;
+ font-weight:bold;
+ transition:.2s;
+}
+.role-card:hover,.role-card.selected{
+ transform:translateY(-3px);
+ border-color:var(--accent);
+ box-shadow:0 8px 25px #0003;
+}
+.role-logo{
+ width:70px;
+ height:48px;
+ margin:0 auto 9px;
+ background-image:url("yeeps-role-logos.png");
+ background-repeat:no-repeat;
+ background-size:600% 100%;
+}
+.role-logo.game{background-position:0% center}
+.role-logo.discord{background-position:20% center}
+.role-logo.creator{background-position:40% center}
+.role-logo.program{background-position:60% center}
+.role-logo.developer{background-position:100% center}
+.role-emoji{
+ height:48px;
+ font-size:32px;
+}
+.role-card small{
+ display:block;
+ font-size:11px;
 }
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, system-ui, Arial, sans-serif;
-  min-height: 100vh;
-  transition: background .25s, color .25s;
+.players{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:12px;
+}
+.player{
+ background:var(--panel);
+ border:1px solid var(--border);
+ border-radius:17px;
+ padding:17px;
+ backdrop-filter:blur(12px);
+}
+.player-top{
+ display:flex;
+ align-items:center;
+ gap:12px;
+}
+.avatar{
+ width:43px;
+ height:43px;
+ border-radius:14px;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(135deg,#45c8df,#8372f6);
+ color:white;
+ font-size:20px;
+ font-weight:900;
+ flex-shrink:0;
+}
+.player-name{
+ font-weight:900;
+ overflow-wrap:anywhere;
+}
+.player-sub{
+ font-size:11px;
+ color:var(--muted);
+ margin-top:4px;
+}
+.badges{
+ display:flex;
+ flex-wrap:wrap;
+ gap:6px;
+ margin-top:14px;
+}
+.badge{
+ display:flex;
+ align-items:center;
+ gap:5px;
+ padding:5px 8px;
+ border-radius:30px;
+ background:var(--panel2);
+ border:1px solid var(--border);
+ font-size:10px;
+ font-weight:bold;
+}
+.badge img{
+ width:18px;
+ height:18px;
+ object-fit:contain;
+}
+.edit-btn{
+ margin-left:auto;
+ padding:7px 9px;
+ border:1px solid var(--border);
+ background:var(--panel2);
+ color:var(--text);
+ border-radius:8px;
+ font-size:11px;
+}
+.empty{
+ grid-column:1/-1;
+ padding:35px;
+ text-align:center;
+ background:var(--panel);
+ border-radius:15px;
+ color:var(--muted);
 }
 
-button, input { font: inherit; }
-
-button { cursor: pointer; }
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 13px 4%;
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(18px);
+.admin{
+ display:none;
+ gap:8px;
+ flex-wrap:wrap;
+ margin:15px 0;
+}
+.admin.show{display:flex}
+.action{
+ padding:10px 14px;
+ border-radius:10px;
+ border:0;
+ font-weight:bold;
+ background:#6878ff;
+ color:white;
+}
+.about{
+ margin-top:30px;
+ line-height:1.7;
+}
+.about p{color:var(--muted)}
+footer{
+ text-align:center;
+ color:var(--muted);
+ padding:30px;
+ font-size:12px;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 950;
-  font-size: 22px;
-  letter-spacing: -1px;
-  white-space: nowrap;
+.modal-bg{
+ position:fixed;
+ inset:0;
+ z-index:30;
+ background:#000b;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:15px;
 }
-
-.brand-icon {
-  width: 39px;
-  height: 39px;
-  border-radius: 13px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg,#55aaff,#785cff);
-  color: white;
-  font-size: 21px;
-  box-shadow: 0 5px 15px #3985ff55;
+.modal-bg.show{display:flex}
+.modal{
+ width:min(500px,100%);
+ max-height:90vh;
+ overflow:auto;
+ background:var(--panel2);
+ border:1px solid var(--border);
+ border-radius:20px;
+ padding:23px;
 }
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
+.modal h2{margin-top:0}
+.modal input[type="text"],
+.modal input[type="password"]{
+ width:100%;
+ padding:12px;
+ margin:8px 0;
+ border:1px solid var(--border);
+ border-radius:10px;
+ background:var(--panel);
+ color:var(--text);
 }
-
-.nav button {
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  padding: 10px 12px;
-  border-radius: 11px;
-  font-size: 12px;
-  font-weight: 800;
-  white-space: nowrap;
+.checks{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+ margin:12px 0;
 }
-
-.nav button.active,
-.nav button:hover {
-  background: var(--panel2);
-  color: var(--accent);
+.checks label{
+ background:var(--panel);
+ border:1px solid var(--border);
+ border-radius:9px;
+ padding:10px;
+ font-size:12px;
 }
-
-.top-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+.modal-actions{
+ display:flex;
+ gap:8px;
+ justify-content:flex-end;
+ margin-top:15px;
 }
-
-.small-btn {
-  border: 1px solid var(--border);
-  background: var(--panel2);
-  color: var(--text);
-  padding: 9px 12px;
-  border-radius: 11px;
-  font-weight: 800;
-  font-size: 12px;
-  white-space: nowrap;
+.secondary{
+ background:var(--panel);
+ border:1px solid var(--border);
+ color:var(--text);
+ padding:10px 14px;
+ border-radius:10px;
 }
+.danger{background:#c43e59;color:white}
+.error{color:#ff718b;font-size:12px}
 
-.small-btn:hover { filter: brightness(1.08); }
-
-.hero {
-  position: relative;
-  overflow: hidden;
-  margin: 26px auto;
-  width: 92%;
-  max-width: 1400px;
-  min-height: 245px;
-  border-radius: 25px;
-  padding: 38px;
-  display: flex;
-  align-items: center;
-  background:
-    radial-gradient(circle at 80% 20%,#76baff88,transparent 32%),
-    radial-gradient(circle at 95% 90%,#9472ff88,transparent 35%),
-    linear-gradient(120deg,#163b72,#286dc2 55%,#654ed1);
-  color: white;
-  box-shadow: var(--shadow);
+@media(max-width:850px){
+ .hero{grid-template-columns:1fr}
+ .roles{grid-template-columns:repeat(3,1fr)}
+ .players{grid-template-columns:repeat(2,1fr)}
 }
-
-body.dark .hero {
-  background:
-    radial-gradient(circle at 80% 20%,#426bba88,transparent 32%),
-    radial-gradient(circle at 95% 90%,#7153c988,transparent 35%),
-    linear-gradient(120deg,#08172d,#142f58 55%,#34265e);
-}
-
-.hero-content { max-width: 650px; position: relative; z-index: 1; }
-
-.hero-tag {
-  display: inline-block;
-  padding: 7px 12px;
-  background: #ffffff22;
-  border: 1px solid #ffffff33;
-  border-radius: 30px;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  margin-bottom: 15px;
-}
-
-.hero h1 {
-  margin: 0;
-  font-size: clamp(35px,6vw,62px);
-  line-height: 1;
-  letter-spacing: -3px;
-}
-
-.hero p {
-  color: #e0edff;
-  font-size: 15px;
-  margin: 15px 0 0;
-}
-
-.hero-decoration {
-  position: absolute;
-  right: 8%;
-  top: 50%;
-  transform: translateY(-50%) rotate(-12deg);
-  font-size: clamp(75px,14vw,145px);
-  opacity: .85;
-  filter: drop-shadow(0 12px 12px #001a5555);
-  user-select: none;
-}
-
-main {
-  width: 92%;
-  max-width: 1400px;
-  margin: auto;
-}
-
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin: 28px 0 17px;
-}
-
-.section-title {
-  font-size: 24px;
-  font-weight: 950;
-  letter-spacing: -1px;
-}
-
-.section-subtitle {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-.search {
-  width: min(100%,320px);
-  padding: 12px 15px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 13px;
-  outline: none;
-}
-
-.search:focus { border-color: var(--accent); }
-
-.role-summary {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-  margin: 18px 0 25px;
-}
-
-.role-chip {
-  border: 1px solid var(--border);
-  background: var(--panel);
-  color: var(--text);
-  border-radius: 13px;
-  padding: 9px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 850;
-}
-
-.role-chip:hover {
-  border-color: var(--accent);
-  transform: translateY(-1px);
-}
-
-.role-logo {
-  width: 27px;
-  height: 27px;
-  flex-shrink: 0;
-  border-radius: 9px;
-  display: inline-grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 950;
-  color: white;
-  background: var(--logo-color,#3985ff);
-  overflow: hidden;
-}
-
-.role-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.players-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(245px,1fr));
-  gap: 14px;
-  margin-bottom: 50px;
-}
-
-.player-card {
-  position: relative;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 17px;
-  padding: 17px;
-  box-shadow: var(--shadow);
-  transition: transform .18s,border .18s;
-  min-width: 0;
-}
-
-.player-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent);
-}
-
-.player-top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.avatar {
-  width: 43px;
-  height: 43px;
-  flex-shrink: 0;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg,#399bff,#7459e9);
-  color: white;
-  font-weight: 950;
-  font-size: 16px;
-}
-
-.player-name {
-  font-size: 15px;
-  font-weight: 900;
-  overflow-wrap: anywhere;
-}
-
-.player-label {
-  color: var(--muted);
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-.player-roles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 15px;
-}
-
-.player-role {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  border-radius: 9px;
-  padding: 5px 8px;
-  background: var(--panel2);
-  color: var(--text);
-  font-size: 10px;
-  font-weight: 850;
-}
-
-.player-role .role-logo {
-  width: 19px;
-  height: 19px;
-  border-radius: 6px;
-  font-size: 9px;
-}
-
-.card-actions {
-  display: flex;
-  gap: 7px;
-  margin-top: 14px;
-}
-
-.card-actions button {
-  border: 1px solid var(--border);
-  background: var(--panel2);
-  color: var(--text);
-  padding: 7px 10px;
-  border-radius: 9px;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.card-actions button:hover { border-color: var(--accent); }
-
-.empty {
-  padding: 40px;
-  text-align: center;
-  color: var(--muted);
-  background: var(--panel);
-  border: 1px dashed var(--border);
-  border-radius: 17px;
-  grid-column: 1/-1;
-}
-
-.about {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 25px;
-  margin: 30px 0 50px;
-  box-shadow: var(--shadow);
-}
-
-.about h2 { margin: 0 0 10px; }
-.about p { color: var(--muted); line-height: 1.7; }
-
-.owner-banner {
-  display: none;
-  padding: 11px 15px;
-  margin: 15px 0;
-  border-radius: 12px;
-  color: #176c42;
-  background: #b9f4d4;
-  font-weight: 850;
-  font-size: 12px;
-}
-
-.owner-banner.show { display: block; }
-
-.owner-tools {
-  display: none;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 15px 0;
-}
-
-.owner-tools.show { display: flex; }
-
-.owner-tools button {
-  border: 0;
-  background: var(--accent);
-  color: white;
-  border-radius: 11px;
-  padding: 11px 14px;
-  font-weight: 850;
-  font-size: 12px;
-}
-
-footer {
-  text-align: center;
-  padding: 25px;
-  color: var(--muted);
-  font-size: 11px;
-  border-top: 1px solid var(--border);
-}
-
-@media(max-width:850px) {
-  .topbar { flex-wrap: wrap; }
-  .brand { font-size: 19px; }
-  .nav { order: 3; width: 100%; }
-  .hero { padding: 27px; min-height: 220px; }
-  .hero-decoration { right: 4%; opacity: .35; }
-}
-
-@media(max-width:500px) {
-  .hero { padding: 25px 21px; }
-  .hero h1 { letter-spacing: -2px; }
-  .players-grid { grid-template-columns: 1fr; }
-  .top-actions { margin-left: auto; }
+@media(max-width:580px){
+ header{gap:8px}
+ nav{order:3;flex-basis:100%}
+ .players{grid-template-columns:1fr}
+ .roles{grid-template-columns:repeat(2,1fr)}
+ .searchrow{flex-direction:column}
 }
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <div class="brand-icon">Y</div>
-    <span>YeepsHub</span>
-  </div>
+<header>
+ <div class="brand">🌲 Yeeps<span>Hub</span></div>
 
-  <nav class="nav" id="navigation"></nav>
+ <nav id="nav">
+  <button class="active" data-role="All">All Players</button>
+  <button data-role="Game Moderator">Game Mods</button>
+  <button data-role="Discord Moderator">Discord Mods</button>
+  <button data-role="Prime Moderator">Prime Mods</button>
+  <button data-role="Star Creator">Star Creators</button>
+  <button data-role="Star Program">Star Program</button>
+  <button data-role="Developer">Developers</button>
+ </nav>
 
-  <div class="top-actions">
-    <button class="small-btn" onclick="toggleTheme()" id="themeButton">🌙</button>
-    <button class="small-btn" onclick="ownerLogin()">Owner</button>
-  </div>
+ <div class="top-actions">
+  <button id="themeBtn">☀️ Light</button>
+  <button id="ownerBtn">Owner Login</button>
+ </div>
 </header>
 
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-tag">THE YEEPS COMMUNITY DIRECTORY</div>
-    <h1>Everything Yeeps.<br>One Place.</h1>
-    <p>Discover the people, creators, and teams behind the Yeeps community.</p>
-  </div>
-  <div class="hero-decoration">🌎</div>
-</section>
-
 <main>
-  <div class="toolbar">
-    <div>
-      <div class="section-title" id="pageTitle">Community Members</div>
-      <div class="section-subtitle" id="pageSubtitle">Explore the people of Yeeps.</div>
+
+ <section class="hero">
+  <div class="panel">
+   <div class="eyebrow">THE YEEPS COMMUNITY DIRECTORY</div>
+   <h1>Everything <span>Yeeps.</span><br>One Place.</h1>
+   <p>Discover the moderators, creators, developers, and community members behind Yeeps.</p>
+  </div>
+
+  <div class="panel">
+   <div class="eyebrow">WELCOME TO THE HUB</div>
+   <h2>Find your people.</h2>
+   <div class="stats">
+    <div class="stat">
+     <strong id="totalCount">0</strong>
+     <small>Players listed</small>
     </div>
-    <input class="search" id="search" placeholder="🔎 Search players..." oninput="renderPlayers()">
+    <div class="stat">
+     <strong>6</strong>
+     <small>Role categories</small>
+    </div>
+   </div>
   </div>
+ </section>
 
-  <div class="role-summary" id="roleSummary"></div>
+ <div class="searchrow">
+  <input id="search" placeholder="🔎 Search players by username...">
+ </div>
 
-  <div class="owner-banner" id="ownerBanner">
-    ✓ Owner mode is active. You can edit the directory.
-  </div>
+ <div class="section-title">
+  <h2>Explore roles</h2>
+  <p>Select a role to filter the directory.</p>
+ </div>
 
-  <div class="owner-tools" id="ownerTools">
-    <button onclick="addPlayer()">＋ Add Player</button>
-    <button onclick="resetPlayers()">Reset Directory</button>
-    <button onclick="ownerLogout()">Exit Owner Mode</button>
-  </div>
+ <section class="roles" id="roles"></section>
 
-  <section class="players-grid" id="players"></section>
+ <div class="section-title">
+  <h2 id="listTitle">Community members</h2>
+  <p id="listSubtitle">Browse the people in YeepsHub.</p>
+ </div>
 
-  <section class="about" id="about">
-    <h2>🌎 About YeepsHub</h2>
-    <p>
-      YeepsHub is a community directory made to bring Yeeps players,
-      moderators, creators, programs, and developers together in one place.
-      Explore the different roles and discover the people behind the community.
-    </p>
-    <p><strong>Everything Yeeps. One Place.</strong></p>
-  </section>
+ <div class="admin" id="admin">
+  <button class="action" id="addBtn">＋ Add Player</button>
+  <button class="action" id="exportBtn">Export Backup</button>
+  <button class="action" id="resetBtn">Reset Original List</button>
+ </div>
+
+ <section class="players" id="players"></section>
+
+ <section class="panel about">
+  <div class="eyebrow">ABOUT YEEPSHUB</div>
+  <h2>Made for the Yeeps community.</h2>
+  <p>YeepsHub is an unofficial, fan-made community directory. It helps people discover community members and the roles they hold.</p>
+  <p><b>Multiple roles:</b> Players can have several roles at once. Their badges stack on their profiles.</p>
+ </section>
+
 </main>
 
-<footer>
-  YeepsHub • Community directory • Not an official Yeeps website
-</footer>
+<footer>YeepsHub · Everything Yeeps. One Place. 💙</footer>
+
+<div class="modal-bg" id="loginModal">
+ <div class="modal">
+  <h2>🔐 Owner Login</h2>
+  <p>Enter your owner password to manage the directory.</p>
+  <input id="password" type="password" placeholder="Owner password">
+  <p class="error" id="loginError"></p>
+  <div class="modal-actions">
+   <button class="secondary" data-close="loginModal">Cancel</button>
+   <button class="action" id="loginSubmit">Unlock</button>
+  </div>
+ </div>
+</div>
+
+<div class="modal-bg" id="editModal">
+ <div class="modal">
+  <h2 id="editTitle">Add Player</h2>
+  <label>Username</label>
+  <input id="playerName" type="text" maxlength="70" placeholder="Player username">
+  <p>Select all roles that apply:</p>
+  <div class="checks" id="checks"></div>
+  <div class="modal-actions">
+   <button class="secondary" data-close="editModal">Cancel</button>
+   <button class="action" id="savePlayer">Save Player</button>
+  </div>
+ </div>
+</div>
 
 <script>
-/*
-  LOGO SETUP
+/* ======================================
+   YEEPSHUB PLAYER DATA
+====================================== */
 
-  When you have cropped the logos from your screenshot, put the image files
-  in a folder named "logos".
-
-  Example:
-  logos/game-mod.png
-  logos/discord-mod.png
-  logos/prime-mod.png
-  logos/star-creator.png
-  logos/star-program.png
-  logos/developer.png
-
-  Then update the logo paths below.
-*/
-
-const roles = [
-  {name:"All Members", color:"#3985ff", short:"ALL", logo:""},
-  {name:"Game Mod", color:"#438cff", short:"GM", logo:""},
-  {name:"Discord Mod", color:"#7289da", short:"DM", logo:""},
-  {name:"Prime Mod", color:"#a36bff", short:"PM", logo:""},
-  {name:"Star Creator", color:"#bd65ff", short:"SC", logo:""},
-  {name:"Star Program", color:"#438cff", short:"SP", logo:""},
-  {name:"Developer", color:"#28b88a", short:"DEV", logo:""}
+const INITIAL = [
+ {name:"! EXLEAFFERY !",roles:["Game Moderator"]},
+ {name:"! HYasF is On ...",roles:["Game Moderator"]},
+ {name:"!☆-MALEKSP...",roles:["Game Moderator"]},
+ {name:"~Ali-cicle ...",roles:["Game Moderator"]},
+ {name:"-Stormy-",roles:["Game Moderator","Discord Moderator"]},
+ {name:"-,`Ianthe`,-",roles:["Game Moderator"]},
+ {name:"AndrewLeon",roles:["Discord Moderator"]},
+ {name:"bigman",roles:["Game Moderator","Discord Moderator"]},
+ {name:"[Bokobling]",roles:["Game Moderator","Discord Moderator"]},
+ {name:"Blueberrri",roles:["Game Moderator","Discord Moderator"]},
+ {name:"Bracket1",roles:["Game Moderator","Discord Moderator"]},
+ {name:"Branden",roles:["Game Moderator"]},
+ {name:"Brenn",roles:["Game Moderator"]},
+ {name:"Buddyzee",roles:["Game Moderator","Discord Moderator"]},
+ {name:"Cybolf",roles:["Game Moderator"]},
+ {name:"DeaconTheGreat",roles:["Game Moderator"]},
+ {name:"DJ",roles:["Game Moderator"]},
+ {name:"ethan",roles:["Game Moderator"]},
+ {name:"Froney",roles:[]},
+ {name:"ghost",roles:["Game Moderator"]},
+ {name:"gthöckey",roles:["Game Moderator"]},
+ {name:"Harbinger of ...",roles:["Game Moderator"]},
+ {name:"Hu...",roles:["Game Moderator"]},
+ {name:"ItsInfini...",roles:["Game Moderator","Discord Moderator"]},
+ {name:"ItzBrody",roles:["Game Moderator"]},
+ {name:"I festive Grav...",roles:["Game Moderator"]},
+ {name:"I Lethal Egg I",roles:["Game Moderator"]},
+ {name:"Jona",roles:["Game Moderator","Discord Moderator"]},
+ {name:"Kade",roles:["Game Moderator","Discord Moderator"]},
+ {name:"LaZered",roles:["Game Moderator"]},
+ {name:"LLC LANDON",roles:["Game Moderator"]},
+ {name:"LinkNotAbe",roles:["Game Moderator"]},
+ {name:"Minby",roles:["Game Moderator"]},
+ {name:"moist_bagel",roles:[]},
+ {name:"MrCoal",roles:[]},
+ {name:"N1CS | FC...",roles:["Game Moderator"]},
+ {name:"Opphat",roles:["Game Moderator"]},
+ {name:"pancake",roles:["Game Moderator"]},
+ {name:"Pineappllll...",roles:["Game Moderator"]},
+ {name:"Polar",roles:["Discord Moderator"]},
+ {name:"ramzzy",roles:["Game Moderator"]},
+ {name:"Renan",roles:["Game Moderator"]},
+ {name:"Ryforc...",roles:["Game Moderator"]},
+ {name:"Sewage | Wilds Ki...",roles:["Game Moderator","Discord Moderator"]},
+ {name:"SparklesandS...",roles:[]},
+ {name:"Spooky Axolo...",roles:["Game Moderator"]},
+ {name:"Spooky Jaden",roles:["Game Moderator"]},
+ {name:"StarProgramPil...",roles:["Game Moderator"]},
+ {name:"stellar",roles:["Game Moderator"]},
+ {name:"Starlight...",roles:["Game Moderator"]},
+ {name:"ThatOneK...",roles:["Game Moderator","Discord Moderator"]},
+ {name:"Unknown",roles:[]},
+ {name:"Wafflespoon",roles:["Game Moderator"]},
+ {name:"Watchpoint",roles:["Game Moderator"]},
+ {name:"your thankful father",roles:["Game Moderator"]},
+ {name:"≀`Dinoclaus...",roles:["Game Moderator"]},
+ {name:"✦ .°Starlight...",roles:["Game Moderator"]},
+ {name:"❄ ~ Dinoclaus...",roles:["Game Moderator"]},
+ {name:"☆Minby☆",roles:["Game Moderator"]},
+ {name:"✽✽ LinkNotAbe ✽✽",roles:["Game Moderator"]},
+ {name:"ƚιɾαɱex 《TMX...",roles:["Game Moderator"]},
+ {name:"🌲 I festive Grav...",roles:["Game Moderator"]},
+ {name:"🌲 Pineappllll...",roles:["Game Moderator"]},
+ {name:"🌲 Ryforc...",roles:["Game Moderator"]},
+ {name:"💖 💗 Hu...",roles:["Game Moderator"]},
+ {name:"Enku",roles:["Game Moderator"]},
+ {name:"Gbeast",roles:["Game Moderator"]},
+ {name:"Grim Ryeeper",roles:["Game Moderator","Discord Moderator","Prime Moderator"]},
+ {name:"GumDrop",roles:["Game Moderator"]},
+ {name:"Awg",roles:["Discord Moderator"]},
+ {name:"British-Perso...",roles:["Discord Moderator"]},
+ {name:"Melk",roles:["Discord Moderator"]},
+ {name:"Piggy ma Joll...",roles:["Discord Moderator"]},
+ {name:"Santa Paws",roles:["Discord Moderator"]},
+ {name:"Siryeep",roles:["Discord Moderator"]},
+ {name:"attack I",roles:["Discord Moderator"]}
 ];
 
-const roleLogoFiles = {
-  "Game Mod": "logos/game-mod.png",
-  "Discord Mod": "logos/discord-mod.png",
-  "Prime Mod": "logos/prime-mod.png",
-  "Star Creator": "logos/star-creator.png",
-  "Star Program": "logos/star-program.png",
-  "Developer": "logos/developer.png"
+/* ======================================
+   ROLE LOGOS
+   The uploaded logo strip is used as a
+   background image in the role cards.
+====================================== */
+
+const ROLES = [
+ ["Game Moderator","🛡️","game"],
+ ["Discord Moderator","💬","discord"],
+ ["Prime Moderator","⭐","prime"],
+ ["Star Creator","🌟","creator"],
+ ["Star Program","💜","program"],
+ ["Developer","🧑‍💻","developer"]
+];
+
+/* Change this password before publishing.
+   IMPORTANT: a password inside HTML is
+   not secure authentication. */
+
+const PASSWORD = "CHANGE-THIS-PASSWORD";
+
+let players;
+try{
+ const saved=localStorage.getItem("yeepshub_players");
+ players=saved?JSON.parse(saved):structuredClone(INITIAL);
+ if(!Array.isArray(players))players=structuredClone(INITIAL);
+}catch{
+ players=structuredClone(INITIAL);
+}
+
+let activeRole="All";
+let owner=false;
+let editing=null;
+
+function save(){
+ localStorage.setItem("yeepshub_players",JSON.stringify(players));
+}
+
+function esc(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function roleClass(role){
+ return ROLES.find(r=>r[0]===role)?.[2]||"";
+}
+
+function roleEmoji(role){
+ return ROLES.find(r=>r[0]===role)?.[1]||"•";
+}
+
+function roleBadge(role){
+ const cls=roleClass(role);
+ if(["game","discord","creator","program","developer"].includes(cls)){
+  return `<span class="badge">
+   <img src="yeeps-role-logos.png" alt="">
+   ${esc(role)}
+  </span>`;
+ }
+ return `<span class="badge">${roleEmoji(role)} ${esc(role)}</span>`;
+}
+
+function renderRoles(){
+ const grid=document.getElementById("roles");
+
+ grid.innerHTML=ROLES.map(([name,emoji,cls])=>`
+  <button class="role-card ${activeRole===name?"selected":""}"
+   data-role-card="${esc(name)}">
+   ${cls==="prime"
+    ?`<div class="role-emoji">${emoji}</div>`
+    :`<div class="role-logo ${cls}"></div>`}
+   <small>${esc(name)}</small>
+  </button>
+ `).join("");
+
+ grid.querySelectorAll("[data-role-card]").forEach(btn=>{
+  btn.onclick=()=>setRole(btn.dataset.roleCard);
+ });
+}
+
+function setRole(role){
+ activeRole=activeRole===role?"All":role;
+
+ document.querySelectorAll("#nav button").forEach(btn=>{
+  btn.classList.toggle("active",btn.dataset.role===activeRole);
+ });
+
+ document.getElementById("listTitle").textContent=
+  activeRole==="All"?"Community members":activeRole+"s";
+
+ render();
+}
+
+function render(){
+ renderRoles();
+
+ const query=document.getElementById("search").value
+  .toLowerCase().trim();
+
+ const visible=players
+  .map((p,index)=>({...p,index}))
+  .filter(p=>
+   p.name.toLowerCase().includes(query)&&
+   (activeRole==="All"||p.roles.includes(activeRole))
+  )
+  .sort((a,b)=>a.name.localeCompare(b.name));
+
+ document.getElementById("totalCount").textContent=players.length;
+
+ document.getElementById("listSubtitle").textContent=
+  `${visible.length} members shown. Players can have multiple roles.`;
+
+ const host=document.getElementById("players");
+
+ if(!visible.length){
+  host.innerHTML=
+   '<div class="empty">No players found. Try another search.</div>';
+  return;
+ }
+
+ host.innerHTML=visible.map(p=>`
+  <article class="player">
+   <div class="player-top">
+    <div class="avatar">
+     ${esc(p.name.charAt(0).toUpperCase()||"?")}
+    </div>
+    <div style="min-width:0;flex:1">
+     <div class="player-name">${esc(p.name)}</div>
+     <div class="player-sub">
+      ${p.roles.length} assigned roles
+     </div>
+    </div>
+    ${owner
+     ?`<button class="edit-btn" data-edit="${p.index}">Edit</button>`
+     :""}
+   </div>
+   <div class="badges">
+    ${p.roles.length
+     ?p.roles.map(roleBadge).join("")
+     :'<span class="badge">Role not assigned</span>'}
+   </div>
+  </article>
+ `).join("");
+
+ host.querySelectorAll("[data-edit]").forEach(btn=>{
+  btn.onclick=()=>openEditor(Number(btn.dataset.edit));
+ });
+}
+
+function openModal(id){
+ document.getElementById(id).classList.add("show");
+}
+function closeModal(id){
+ document.getElementById(id).classList.remove("show");
+}
+
+document.querySelectorAll("[data-close]").forEach(btn=>{
+ btn.onclick=()=>closeModal(btn.dataset.close);
+});
+
+/* THEME SWITCH */
+
+function setTheme(theme){
+ document.body.classList.toggle("light",theme==="light");
+ document.getElementById("themeBtn").textContent=
+  theme==="light"?"🌙 Dark":"☀️ Light";
+ localStorage.setItem("yeepshub_theme",theme);
+}
+
+document.getElementById("themeBtn").onclick=()=>{
+ setTheme(document.body.classList.contains("light")?"dark":"light");
 };
 
-// Change this before publishing.
-// This is only a front-end demonstration gate, NOT secure authentication.
-const OWNER_PIN = "CHANGE-ME-TO-YOUR-OWN-PIN";
-
-const initialPlayers = [
-  ["! EXLEAFFERY !",["Game Mod"]],
-  ["! HYasF is On ...",["Game Mod"]],
-  ["!☆-MALEKSP...",["Game Mod"]],
-  ["~Ali-cicle ...",["Game Mod"]],
-  ["-Stormy-",["Game Mod","Discord Mod"]],
-  ["-,`Ianthe`,-",["Game Mod"]],
-  ["AndrewLeon",["Discord Mod"]],
-  ["Awg",["Discord Mod"]],
-  ["bigman",["Game Mod","Discord Mod"]],
-  ["[Bokobling]",["Game Mod","Discord Mod"]],
-  ["Blueberrri",["Game Mod","Discord Mod"]],
-  ["Bracket1",["Game Mod","Discord Mod"]],
-  ["Branden",["Game Mod"]],
-  ["Brenn",["Game Mod"]],
-  ["British-Perso...",["Discord Mod"]],
-  ["Buddyzee",["Game Mod","Discord Mod"]],
-  ["Cybolf",["Game Mod"]],
-  ["DeaconTheGreat",["Game Mod"]],
-  ["DJ",["Game Mod"]],
-  ["ethan",["Game Mod"]],
-  ["Froney",[]],
-  ["ghost",["Game Mod"]],
-  ["gthöckey",["Game Mod"]],
-  ["Harbinger of ...",["Game Mod"]],
-  ["Hu...",["Game Mod"]],
-  ["ItsInfini...",["Game Mod","Discord Mod"]],
-  ["ItzBrody",["Game Mod"]],
-  ["I festive Grav...",["Game Mod"]],
-  ["I Lethal Egg I",["Game Mod"]],
-  ["Jona",["Game Mod","Discord Mod"]],
-  ["Kade",["Game Mod","Discord Mod"]],
-  ["LaZered",["Game Mod"]],
-  ["LLC LANDON",["Game Mod"]],
-  ["LinkNotAbe",["Game Mod"]],
-  ["Minby",["Game Mod"]],
-  ["moist_bagel",[]],
-  ["MrCoal",[]],
-  ["N1CS | FC...",["Game Mod"]],
-  ["Opphat",["Game Mod"]],
-  ["pancake",["Game Mod"]],
-  ["Pineappllll...",["Game Mod"]],
-  ["Polar",["Discord Mod"]],
-  ["ramzzy",["Game Mod"]],
-  ["Renan",["Game Mod"]],
-  ["Ryforc...",["Game Mod"]],
-  ["Sewage | Wilds Ki...",["Game Mod","Discord Mod"]],
-  ["SparklesandS...",[]],
-  ["Spooky Axolo...",["Game Mod"]],
-  ["Spooky Jaden",["Game Mod"]],
-  ["StarProgramPil...",["Game Mod"]],
-  ["stellar",["Game Mod"]],
-  ["Starlight...",["Game Mod"]],
-  ["ThatOneK...",["Game Mod","Discord Mod"]],
-  ["Unknown",[]],
-  ["Wafflespoon",["Game Mod"]],
-  ["Watchpoint",["Game Mod"]],
-  ["your thankful father",["Game Mod"]],
-  ["≀`Dinoclaus...",["Game Mod"]],
-  ["✦ .°Starlight...",["Game Mod"]],
-  ["❄ ~ Dinoclaus...",["Game Mod"]],
-  ["☆Minby☆",["Game Mod"]],
-  ["✽✽ LinkNotAbe ✽✽",["Game Mod"]],
-  ["ƚιɾαɱex 《TMX...",["Game Mod"]],
-  ["🌲 I festive Grav...",["Game Mod"]],
-  ["🌲 Pineappllll...",["Game Mod"]],
-  ["🌲 Ryforc...",["Game Mod"]],
-  ["💖 💗 Hu...",["Game Mod"]],
-  ["Grim Ryeeper",["Game Mod","Discord Mod","Prime Mod"]],
-  ["Gbeast",["Game Mod"]],
-  ["Enku",["Game Mod"]],
-  ["GumDrop",["Game Mod"]],
-  ["Melk",["Discord Mod"]],
-  ["Piggy ma Joll...",["Discord Mod"]],
-  ["Santa Paws",["Discord Mod"]],
-  ["Siryeep",["Discord Mod"]],
-  ["attack I",["Discord Mod"]]
-];
-
-let players = [];
-let activeRole = "All Members";
-let ownerMode = false;
-
-function loadPlayers() {
-  const saved = localStorage.getItem("yeephub_players");
-  if (saved) {
-    try {
-      players = JSON.parse(saved);
-    } catch {
-      players = initialPlayers.map((p,i)=>({id:i+1,name:p[0],roles:p[1]}));
-    }
-  } else {
-    players = initialPlayers.map((p,i)=>({id:i+1,name:p[0],roles:p[1]}));
-  }
+if(localStorage.getItem("yeepshub_theme")==="light"){
+ setTheme("light");
 }
 
-function savePlayers() {
-  localStorage.setItem("yeephub_players",JSON.stringify(players));
-}
+/* OWNER LOGIN */
 
-function logoHTML(roleName) {
-  const role = roles.find(r=>r.name===roleName);
-  const file = roleLogoFiles[roleName];
-  const color = role ? role.color : "#3985ff";
-  const short = role ? role.short : "?";
+document.getElementById("ownerBtn").onclick=()=>{
+ if(owner){
+  owner=false;
+  document.getElementById("ownerBtn").textContent="Owner Login";
+  document.getElementById("admin").classList.remove("show");
+  render();
+ }else{
+  openModal("loginModal");
+ }
+};
 
-  if (file) {
-    return `<span class="role-logo" style="--logo-color:${color}">
-      <img src="${file}" alt="${roleName} logo"
-      onerror="this.style.display='none';this.parentElement.textContent='${short}'">
-    </span>`;
-  }
+document.getElementById("loginSubmit").onclick=()=>{
+ const entered=document.getElementById("password").value;
 
-  return `<span class="role-logo" style="--logo-color:${color}">${short}</span>`;
-}
+ if(entered===PASSWORD&&PASSWORD!=="CHANGE-THIS-PASSWORD"){
+  owner=true;
+  closeModal("loginModal");
+  document.getElementById("ownerBtn").textContent="Lock Dashboard";
+  document.getElementById("admin").classList.add("show");
+  document.getElementById("loginError").textContent="";
+  document.getElementById("password").value="";
+  render();
+ }else{
+  document.getElementById("loginError").textContent=
+   PASSWORD==="CHANGE-THIS-PASSWORD"
+   ?"Set your password in the script first."
+   :"Incorrect password.";
+ }
+};
 
-function renderNavigation() {
-  const nav = document.getElementById("navigation");
-  nav.innerHTML = roles.map(role => `
-    <button class="${activeRole===role.name?'active':''}"
-      onclick="selectRole('${role.name}')">${role.name}</button>
-  `).join("");
-}
+document.getElementById("password").addEventListener("keydown",e=>{
+ if(e.key==="Enter")document.getElementById("loginSubmit").click();
+});
 
-function renderRoleSummary() {
-  const summary = document.getElementById("roleSummary");
-  summary.innerHTML = roles.slice(1).map(role => `
-    <button class="role-chip" onclick="selectRole('${role.name}')">
-      ${logoHTML(role.name)}
-      ${role.name}
-      <span style="color:var(--muted)">
-        ${players.filter(p=>p.roles.includes(role.name)).length}
-      </span>
-    </button>
-  `).join("");
-}
+/* ADD AND EDIT PLAYERS */
 
-function selectRole(roleName) {
-  activeRole = roleName;
-  document.getElementById("pageTitle").textContent =
-    roleName === "All Members" ? "Community Members" : roleName;
-  document.getElementById("pageSubtitle").textContent =
-    roleName === "All Members"
-    ? "Explore the people of Yeeps."
-    : "Members with the " + roleName + " role.";
-  renderNavigation();
-  renderPlayers();
-}
+function openEditor(index=null){
+ if(!owner)return;
 
-function renderPlayers() {
-  const container = document.getElementById("players");
-  const query = document.getElementById("search").value.toLowerCase();
+ editing=index;
 
-  const filtered = players.filter(player => {
-    const matchesRole = activeRole==="All Members" ||
-      player.roles.includes(activeRole);
-    const matchesSearch = player.name.toLowerCase().includes(query);
-    return matchesRole && matchesSearch;
-  });
+ const player=index===null
+  ?{name:"",roles:[]}
+  :players[index];
 
-  if (!filtered.length) {
-    container.innerHTML = `<div class="empty">
-      <div style="font-size:30px">🔎</div>
-      <h3>No players found</h3>
-      <p>Try another search or role.</p>
-    </div>`;
-    return;
-  }
+ document.getElementById("editTitle").textContent=
+  index===null?"Add Player":"Edit Player";
 
-  container.innerHTML = filtered.map(player => {
-    const initials = player.name.trim().slice(0,2).toUpperCase();
-    const badges = player.roles.length
-      ? player.roles.map(role => `
-        <span class="player-role">
-          ${logoHTML(role)}
-          ${role}
-        </span>`).join("")
-      : `<span class="player-role">Member</span>`;
+ document.getElementById("playerName").value=player.name;
 
-    return `
-      <article class="player-card">
-        <div class="player-top">
-          <div class="avatar">${escapeHTML(initials)}</div>
-          <div style="min-width:0">
-            <div class="player-name">${escapeHTML(player.name)}</div>
-            <div class="player-label">Yeeps Community Member</div>
-          </div>
-        </div>
-        <div class="player-roles">${badges}</div>
-        ${ownerMode ? `
-          <div class="card-actions">
-            <button onclick="editPlayer(${player.id})">✏️ Edit</button>
-            <button onclick="deletePlayer(${player.id})">🗑 Remove</button>
-          </div>` : ""}
-      </article>`;
-  }).join("");
-}
+ document.getElementById("checks").innerHTML=ROLES.map(([role,emoji])=>`
+  <label>
+   <input type="checkbox" value="${esc(role)}"
+    ${player.roles.includes(role)?"checked":""}>
+   ${emoji} ${esc(role)}
+  </label>
+ `).join("");
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[char]));
-}
-
-function addPlayer() {
-  const name = prompt("Enter the player's username:");
-  if (!name || !name.trim()) return;
-
-  const roleText = prompt(
-    "Enter roles separated by commas:\nGame Mod, Discord Mod, Prime Mod, Star Creator, Star Program, Developer\n\nLeave blank for Member."
+ if(index!==null){
+  document.getElementById("checks").insertAdjacentHTML(
+   "beforeend",
+   `<button class="action danger" id="deletePlayer"
+    style="grid-column:1/-1">Delete Player</button>`
   );
 
-  const selected = parseRoles(roleText || "");
-  players.push({
-    id: Date.now(),
-    name: name.trim(),
-    roles: selected
-  });
+  document.getElementById("deletePlayer").onclick=()=>{
+   if(confirm("Delete this player?")){
+    players.splice(index,1);
+    save();
+    closeModal("editModal");
+    render();
+   }
+  };
+ }
 
-  savePlayers();
-  refresh();
+ openModal("editModal");
 }
 
-function editPlayer(id) {
-  const player = players.find(p=>p.id===id);
-  if (!player) return;
+document.getElementById("addBtn").onclick=()=>openEditor();
 
-  const newName = prompt("Change username:",player.name);
-  if (!newName || !newName.trim()) return;
+document.getElementById("savePlayer").onclick=()=>{
+ const name=document.getElementById("playerName").value.trim();
 
-  const roleText = prompt(
-    "Edit roles separated by commas:",
-    player.roles.join(", ")
-  );
+ if(!name){
+  alert("Enter a username.");
+  return;
+ }
 
-  player.name = newName.trim();
-  if (roleText !== null) player.roles = parseRoles(roleText);
+ const roles=[
+  ...document.querySelectorAll("#checks input:checked")
+ ].map(input=>input.value);
 
-  savePlayers();
-  refresh();
-}
+ const player={name,roles};
 
-function parseRoles(value) {
-  return value.split(",")
-    .map(x=>x.trim().toLowerCase())
-    .map(input => roles.slice(1).find(r=>
-      r.name.toLowerCase()===input
-    ))
-    .filter(Boolean)
-    .map(r=>r.name)
-    .filter((r,i,a)=>a.indexOf(r)===i);
-}
+ if(editing===null){
+  players.push(player);
+ }else{
+  players[editing]=player;
+ }
 
-function deletePlayer(id) {
-  const player = players.find(p=>p.id===id);
-  if (!player) return;
+ save();
+ closeModal("editModal");
+ render();
+};
 
-  if (!confirm("Remove " + player.name + " from YeepsHub?")) return;
+/* SEARCH */
 
-  players = players.filter(p=>p.id!==id);
-  savePlayers();
-  refresh();
-}
+document.getElementById("search").addEventListener("input",render);
 
-function resetPlayers() {
-  if (!confirm("Reset the directory to its original player list?")) return;
+/* TOP ROLE NAVIGATION */
 
-  players = initialPlayers.map((p,i)=>({
-    id:i+1,
-    name:p[0],
-    roles:[...p[1]]
-  }));
+document.querySelectorAll("#nav button").forEach(btn=>{
+ btn.onclick=()=>setRole(btn.dataset.role);
+});
 
-  savePlayers();
-  refresh();
-}
+/* BACKUP */
 
-function refresh() {
-  renderNavigation();
-  renderRoleSummary();
-  renderPlayers();
-}
+document.getElementById("exportBtn").onclick=()=>{
+ const blob=new Blob(
+  [JSON.stringify(players,null,2)],
+  {type:"application/json"}
+ );
 
-function ownerLogin() {
-  if (ownerMode) {
-    ownerLogout();
-    return;
-  }
+ const link=document.createElement("a");
+ link.href=URL.createObjectURL(blob);
+ link.download="yeepshub-backup.json";
+ link.click();
+ URL.revokeObjectURL(link.href);
+};
 
-  const pin = prompt("LeafVault#M0dly_84Q!:");
-  if (pin === null) return;
+/* RESET */
 
-  if (pin === OWNER_PIN && OWNER_PIN !== "CHANGE-ME-TO-YOUR-OWN-PIN") {
-    ownerMode = true;
-    updateOwnerUI();
-  } else {
-    alert("Incorrect PIN. Make sure you have changed OWNER_PIN in the code.");
-  }
-}
+document.getElementById("resetBtn").onclick=()=>{
+ if(confirm("Reset the directory to its original starter list?")){
+  players=structuredClone(INITIAL);
+  save();
+  render();
+ }
+};
 
-function updateOwnerUI() {
-  document.getElementById("ownerBanner").classList.toggle("show",ownerMode);
-  document.getElementById("ownerTools").classList.toggle("show",ownerMode);
-  renderPlayers();
-}
+/* START */
 
-function ownerLogout() {
-  ownerMode = false;
-  updateOwnerUI();
-}
-
-function toggleTheme() {
-  document.body.classList.toggle("dark");
-  const isDark = document.body.classList.contains("dark");
-  localStorage.setItem("yeephub_theme",isDark?"dark":"light");
-  document.getElementById("themeButton").textContent = isDark?"☀️":"🌙";
-}
-
-function loadTheme() {
-  const theme = localStorage.getItem("yeephub_theme");
-  if (theme === "dark") {
-    document.body.classList.add("dark");
-    document.getElementById("themeButton").textContent = "☀️";
-  }
-}
-
-loadPlayers();
-loadTheme();
-refresh();
+render();
 </script>
-
 </body>
 </html>

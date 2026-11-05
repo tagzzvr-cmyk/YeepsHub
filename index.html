@@ -845,7 +845,7 @@ function ownerLogin() {
   const pin = prompt("Enter the owner PIN:");
   if (pin === null) return;
 
-  if (pin === OWNER_PIN && OWNER_PIN !== "LeafVault#M0dly_84Q!") {
+  if (pin === OWNER_PIN && OWNER_PIN !== "Password") {
     ownerMode = true;
     updateOwnerUI();
   } else {

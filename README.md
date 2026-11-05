@@ -39,3 +39,22 @@ Made for the Yeeps community.
 ---
 
 *This is an independent community project and is not officially affiliated with Yeeps.*
+## 🛡️ Staff Roles
+
+### Moderator
+<img src="https://cdn.corenexis.com/f/lwHDyaSE.png" width="80">
+
+### Discord Moderator
+<img src="https://cdn.corenexis.com/f/lwHDyaSE.png" width="80">
+
+### Star Creator
+<img src="https://cdn.corenexis.com/f/lwHDyaSE.png" width="80">
+
+### Star Program
+<img src="https://cdn.corenexis.com/f/lwHDyaSE.png" width="80">
+
+### Developer
+<img src="https://cdn.corenexis.com/f/lwHDyaSE.png" width="80">
+
+### Owner
+<img src="https://cdn.corenexis.com/f/lwHDyaSE.png" width="80">

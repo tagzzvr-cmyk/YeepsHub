@@ -782,7 +782,7 @@ const ROLES = [
  ["Game Moderator","🛡️","game"],
  ["Discord Moderator","💬","discord"],
  ["Prime Moderator","⭐","prime"],
- ["Star Creator","🌟","creator"],
+ ["Star Creator","💛","creator"],
  ["Star Program","💜","program"],
  ["Developer","🧑‍💻","developer"]
 ];
@@ -889,8 +889,8 @@ function roleLogoPath(role){
  const logos={
   "Game Moderator":"assets/shield_blue_cutout.png",
   "Discord Moderator":"assets/discord-moderator.webp",
-  "Star Creator":"assets/star-creator.webp",
-  "Star Program":"assets/star-program.webp",
+  "Star Creator":"assets/star-program.webp",
+  "Star Program":"assets/star-creator.webp",
   "Developer":"assets/gorilla_vr_cutout.png"
  };
  return logos[role]||"";
@@ -901,7 +901,7 @@ function roleLogoMarkup(role, className="role-logo"){
   return `<span class="${className} prime-moderator-logo" role="img" aria-label="Prime Moderator logo"></span>`;
  }
  const src=roleLogoPath(role);
- return src?`<img class="${className}" src="./${src}?v=20261107-dev3" alt="${esc(role)} logo" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/tagzzvr-cmyk/YeepsHub/main/${src}'">`:"";
+ return src?`<img class="${className}" src="./${src}?v=20261107-rolelabels1" alt="${esc(role)} logo" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/tagzzvr-cmyk/YeepsHub/main/${src}'">`:"";
 }
 
 function roleBadge(role){

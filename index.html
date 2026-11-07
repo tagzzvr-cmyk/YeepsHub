@@ -206,12 +206,11 @@ h1 span{color:var(--accent)}
  margin:0 auto 7px;
  overflow:visible;
 }
-/* Developer artwork needs a taller display area so the complete headset
-   and circular border remain visible instead of appearing cropped. */
+/* Keep the original Developer artwork at the same display size as the other role logos. */
 .role-logo[alt="Developer logo"]{
- width:92px;
- height:84px;
- max-width:none;
+ width:76px;
+ height:68px;
+ max-width:100%;
  padding:0;
  object-fit:contain;
  object-position:center;
@@ -797,7 +796,7 @@ function roleLogoPath(role){
   "Discord Moderator":"assets/discord-moderator.webp",
   "Star Creator":"assets/star-creator.webp",
   "Star Program":"assets/star-program.webp",
-  "Developer":"assets/developer.webp"
+  "Developer":"assets/gorilla_vr_cutout.png"
  };
  return logos[role]||"";
 }

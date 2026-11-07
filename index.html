@@ -198,17 +198,16 @@ h1 span{color:var(--accent)}
 }
 .role-logo{
  width:70px;
- height:48px;
+ height:58px;
+ object-fit:contain;
+ display:block;
  margin:0 auto 9px;
- background-image:url("yeeps-role-logos.png");
- background-repeat:no-repeat;
- background-size:600% 100%;
 }
-.role-logo.game{background-position:0% center}
-.role-logo.discord{background-position:20% center}
-.role-logo.creator{background-position:40% center}
-.role-logo.program{background-position:60% center}
-.role-logo.developer{background-position:100% center}
+.badge img{
+ width:18px;
+ height:18px;
+ object-fit:contain;
+}
 .role-emoji{
  height:48px;
  font-size:32px;
@@ -775,11 +774,22 @@ function roleEmoji(role){
  return ROLES.find(r=>r[0]===role)?.[1]||"•";
 }
 
+function roleLogoPath(role){
+ const paths={
+  "Game Moderator":"assets/game-moderator.svg",
+  "Discord Moderator":"assets/discord-moderator.svg",
+  "Star Creator":"assets/star-creator.svg",
+  "Star Program":"assets/star-program.svg",
+  "Developer":"assets/developer.svg"
+ };
+ return paths[role]||"";
+}
+
 function roleBadge(role){
- const cls=roleClass(role);
- if(["game","discord","creator","program","developer"].includes(cls)){
+ const src=roleLogoPath(role);
+ if(src){
   return `<span class="badge">
-   <img src="yeeps-role-logos.png" alt="">
+   <img src="${src}" alt="">
    ${esc(role)}
   </span>`;
  }
@@ -792,9 +802,9 @@ function renderRoles(){
  grid.innerHTML=ROLES.map(([name,emoji,cls])=>`
   <button class="role-card ${activeRole===name?"selected":""}"
    data-role-card="${esc(name)}">
-   ${cls==="prime"
-    ?`<div class="role-emoji">${emoji}</div>`
-    :`<div class="role-logo ${cls}"></div>`}
+   ${roleLogoPath(name)
+    ?`<img class="role-logo" src="${roleLogoPath(name)}" alt="">`
+    :`<div class="role-emoji">${emoji}</div>`}
    <small>${esc(name)}</small>
   </button>
  `).join("");

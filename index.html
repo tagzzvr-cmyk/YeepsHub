@@ -776,8 +776,6 @@ function roleEmoji(role){
 
 function roleLogoPath(role){
  const paths={
-  "Game Moderator":"assets/game-moderator.svg",
-  "Discord Moderator":"assets/discord-moderator.svg",
   "Star Creator":"assets/star-creator.svg",
   "Star Program":"assets/star-program.svg",
   "Developer":"assets/developer.svg"
@@ -785,13 +783,21 @@ function roleLogoPath(role){
  return paths[role]||"";
 }
 
-function roleBadge(role){
+function roleLogoMarkup(role, className="role-logo"){
+ if(role==="Game Moderator"){
+  return `<svg class="${className}" viewBox="0 0 64 64" role="img" aria-label="Light blue shield">
+   <path d="M32 4 55 13v16c0 15-9 25-23 31C18 54 9 44 9 29V13L32 4Z" fill="#8edcff" stroke="#d8f5ff" stroke-width="3" stroke-linejoin="round"/>
+   <path d="M32 11 48 17v12c0 10-5.8 18-16 23-10.2-5-16-13-16-23V17l16-6Z" fill="#b9edff" opacity=".55"/>
+  </svg>`;
+ }
  const src=roleLogoPath(role);
- if(src){
-  return `<span class="badge">
-   <img src="${src}" alt="">
-   ${esc(role)}
-  </span>`;
+ return src?`<img class="${className}" src="${src}" alt="">`:"";
+}
+
+function roleBadge(role){
+ const logo=roleLogoMarkup(role,"");
+ if(logo){
+  return `<span class="badge">${logo}${esc(role)}</span>`;
  }
  return `<span class="badge">${roleEmoji(role)} ${esc(role)}</span>`;
 }
@@ -802,9 +808,8 @@ function renderRoles(){
  grid.innerHTML=ROLES.map(([name,emoji,cls])=>`
   <button class="role-card ${activeRole===name?"selected":""}"
    data-role-card="${esc(name)}">
-   ${roleLogoPath(name)
-    ?`<img class="role-logo" src="${roleLogoPath(name)}" alt="">`
-    :`<div class="role-emoji">${emoji}</div>`}
+   ${roleLogoMarkup(name)
+    ||`<div class="role-emoji">${emoji}</div>`}
    <small>${esc(name)}</small>
   </button>
  `).join("");

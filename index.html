@@ -713,6 +713,37 @@ let activeRole="All";
 let owner=false;
 let editing=null;
 
+/* STAR PROGRAM + STAR CREATOR ROSTER
+   These 12 members have BOTH roles. Merge into saved
+   browser data too, so existing visitors see the update. */
+const STAR_ROSTER = [
+ "Bendapigg",
+ "Cabbage...",
+ "Coffee",
+ "Gmask",
+ "i think i'm Con",
+ "Jb.mp4",
+ "Jolly Loafff",
+ "MakVR",
+ "NotYoCheeseW",
+ "Pufff Bros",
+ "TomLabs",
+ "Nugget"
+];
+
+for(const name of STAR_ROSTER){
+ let player=players.find(p=>p.name.toLowerCase()===name.toLowerCase());
+ if(!player){
+  player={name,roles:[]};
+  players.push(player);
+ }
+ if(!Array.isArray(player.roles))player.roles=[];
+ for(const role of ["Star Program","Star Creator"]){
+  if(!player.roles.includes(role))player.roles.push(role);
+ }
+}
+localStorage.setItem("yeepshub_players",JSON.stringify(players));
+
 function save(){
  localStorage.setItem("yeepshub_players",JSON.stringify(players));
 }

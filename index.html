@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -384,6 +383,24 @@ footer{
 .danger{background:#c43e59;color:white}
 .error{color:#ff718b;font-size:12px}
 
+/* SOCIALS PAGE */
+.social-page{display:none}
+.social-page.active{display:block}
+.social-hero{text-align:center;padding:34px 20px;margin-bottom:22px}
+.social-hero h2{font-size:clamp(30px,5vw,46px);margin:10px 0}
+.social-hero p{color:var(--muted);line-height:1.6}
+.social-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.social-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:28px;backdrop-filter:blur(15px);transition:.2s}
+.social-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.social-card .social-icon{font-size:42px;margin-bottom:14px}
+.social-card h3{font-size:22px;margin:0 0 8px}
+.social-card p{color:var(--muted);line-height:1.6;margin:10px 0 20px}
+.social-handle{color:var(--accent);font-weight:bold}
+.social-link{display:inline-block;text-decoration:none;color:white;background:linear-gradient(135deg,#567cff,#925df3);padding:11px 17px;border-radius:10px;font-weight:bold}
+.social-link:hover{opacity:.85}
+.social-back{margin-top:20px;border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:11px 16px;border-radius:10px;font-weight:bold}
+@media(max-width:580px){.social-grid{grid-template-columns:1fr}}
+
 @media(max-width:850px){
  .hero{grid-template-columns:1fr}
  .roles{grid-template-columns:repeat(3,1fr)}
@@ -412,6 +429,7 @@ footer{
   <button data-role="Star Creator">Star Creators</button>
   <button data-role="Star Program">Star Program</button>
   <button data-role="Developer">Developers</button>
+  <button id="socialsNav" type="button">Socials</button>
  </nav>
 
  <div class="top-actions">
@@ -474,6 +492,32 @@ footer{
   <h2>Made for the Yeeps community.</h2>
   <p>YeepsHub is an unofficial, fan-made community directory. It helps people discover community members and the roles they hold.</p>
   <p><b>Multiple roles:</b> Players can have several roles at once. Their badges stack on their profiles.</p>
+ </section>
+
+ <!-- SOCIALS PAGE -->
+ <section class="social-page" id="socialsPage">
+  <div class="panel social-hero">
+   <div class="eyebrow">CONNECT WITH TAGZZ</div>
+   <h2>🌐 My Socials</h2>
+   <p>Follow my channels for Yeeps videos, clips, and updates!</p>
+  </div>
+  <div class="social-grid">
+   <article class="social-card">
+    <div class="social-icon">▶️</div>
+    <h3>YouTube</h3>
+    <div class="social-handle">@tagzziscool</div>
+    <p>Subscribe to my YouTube channel for videos and Yeeps content.</p>
+    <a class="social-link" href="https://youtube.com/@tagzziscool" target="_blank" rel="noopener noreferrer">Visit YouTube ↗</a>
+   </article>
+   <article class="social-card">
+    <div class="social-icon">🎵</div>
+    <h3>TikTok</h3>
+    <div class="social-handle">@tagzzvr</div>
+    <p>Follow my TikTok for Yeeps videos, clips, and updates.</p>
+    <a class="social-link" href="https://www.tiktok.com/@tagzzvr" target="_blank" rel="noopener noreferrer">Visit TikTok ↗</a>
+   </article>
+  </div>
+  <button class="social-back" type="button" id="backToDirectory">← Back to Player Directory</button>
  </section>
 
 </main>
@@ -673,7 +717,24 @@ function renderRoles(){
  });
 }
 
+function showDirectory(){
+ document.querySelectorAll("main > *").forEach(section=>{section.style.display="";});
+ document.getElementById("socialsPage").classList.remove("active");
+ document.getElementById("socialsNav").classList.remove("active");
+}
+
+function showSocials(){
+ document.querySelectorAll("main > *").forEach(section=>{section.style.display="none";});
+ const page=document.getElementById("socialsPage");
+ page.style.display="block";
+ page.classList.add("active");
+ document.querySelectorAll("#nav button").forEach(btn=>btn.classList.remove("active"));
+ document.getElementById("socialsNav").classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
 function setRole(role){
+ showDirectory();
  activeRole=activeRole===role?"All":role;
 
  document.querySelectorAll("#nav button").forEach(btn=>{
@@ -883,9 +944,21 @@ document.getElementById("search").addEventListener("input",render);
 
 /* TOP ROLE NAVIGATION */
 
-document.querySelectorAll("#nav button").forEach(btn=>{
+document.querySelectorAll("#nav button[data-role]").forEach(btn=>{
  btn.onclick=()=>setRole(btn.dataset.role);
 });
+
+document.getElementById("socialsNav").onclick=showSocials;
+document.getElementById("backToDirectory").onclick=()=>{
+ showDirectory();
+ activeRole="All";
+ document.querySelectorAll("#nav button[data-role]").forEach(btn=>{
+  btn.classList.toggle("active",btn.dataset.role==="All");
+ });
+ document.getElementById("listTitle").textContent="Community members";
+ render();
+ window.scrollTo({top:0,behavior:"smooth"});
+};
 
 /* BACKUP */
 

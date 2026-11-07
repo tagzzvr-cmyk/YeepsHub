@@ -776,22 +776,17 @@ function roleEmoji(role){
 
 function roleLogoPath(role){
  const paths={
-  "Star Creator":"assets/star-creator.svg",
-  "Star Program":"assets/star-program.svg",
-  "Developer":"assets/developer.svg"
+  "Game Moderator":"assets/game-moderator.webp",
+  "Star Creator":"assets/star-creator.webp",
+  "Star Program":"assets/star-program.webp",
+  "Developer":"assets/developer.webp"
  };
  return paths[role]||"";
 }
 
 function roleLogoMarkup(role, className="role-logo"){
- if(role==="Game Moderator"){
-  return `<svg class="${className}" viewBox="0 0 300 280" role="img" aria-label="Light blue shield">
-   <path d="M150 10 278 58v76c0 73-49 117-128 146C71 251 22 207 22 134V58L150 10Z" fill="#fff"/>
-   <path d="M150 31 255 70v64c0 60-39 98-105 124-66-26-105-64-105-124V70l105-39Z" fill="#8edcff"/>
-  </svg>`;
- }
  const src=roleLogoPath(role);
- return src?`<img class="${className}" src="${src}" alt="">`:"";
+ return src?`<img class="${className}" src="${src}" alt="${esc(role)} logo">`:"";
 }
 
 function roleBadge(role){

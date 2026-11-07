@@ -386,21 +386,55 @@ footer{
 /* SOCIALS PAGE */
 .social-page{display:none}
 .social-page.active{display:block}
-.social-hero{text-align:center;padding:34px 20px;margin-bottom:22px}
-.social-hero h2{font-size:clamp(30px,5vw,46px);margin:10px 0}
-.social-hero p{color:var(--muted);line-height:1.6}
+.social-hero{
+ position:relative;overflow:hidden;text-align:left;padding:clamp(28px,6vw,58px);
+ margin-bottom:20px;
+ background:
+ radial-gradient(circle at 85% 15%,rgba(100,217,237,.28),transparent 30%),
+ radial-gradient(circle at 10% 100%,rgba(125,98,255,.28),transparent 35%),
+ var(--panel);
+}
+.social-hero:after{
+ content:"";position:absolute;width:230px;height:230px;border-radius:50%;
+ border:1px solid rgba(255,255,255,.13);right:-65px;bottom:-120px;
+ box-shadow:0 0 0 24px rgba(255,255,255,.025),0 0 0 48px rgba(255,255,255,.02);
+ pointer-events:none;
+}
+.social-hero h2{font-size:clamp(34px,6vw,58px);letter-spacing:-1.8px;margin:12px 0}
+.social-hero p{color:var(--muted);line-height:1.7;max-width:590px;margin:0}
+.social-kicker{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:30px;background:var(--panel2);border:1px solid var(--border);font-size:11px;font-weight:900;letter-spacing:1px}
+.social-kicker i{width:7px;height:7px;border-radius:50%;background:#57dfb0;box-shadow:0 0 12px #57dfb0}
 .social-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.social-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:28px;backdrop-filter:blur(15px);transition:.2s}
-.social-card:hover{transform:translateY(-4px);border-color:var(--accent)}
-.social-card .social-icon{font-size:42px;margin-bottom:14px}
-.social-card h3{font-size:22px;margin:0 0 8px}
-.social-card p{color:var(--muted);line-height:1.6;margin:10px 0 20px}
-.social-handle{color:var(--accent);font-weight:bold}
-.social-link{display:inline-block;text-decoration:none;color:white;background:linear-gradient(135deg,#567cff,#925df3);padding:11px 17px;border-radius:10px;font-weight:bold}
-.social-link:hover{opacity:.85}
+.social-card{
+ position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;
+ min-height:280px;background:var(--panel);border:1px solid var(--border);
+ border-radius:22px;padding:25px;backdrop-filter:blur(15px);transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.social-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 18px 38px #0003}
+.social-card:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#55d8ed,#8274ff);opacity:.9}
+.social-card.tiktok:before{background:linear-gradient(90deg,#25f4ee,#fe2c55)}
+.social-card.youtube:before{background:linear-gradient(90deg,#ff3b4e,#ff8a65)}
+.social-card-top{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.social-icon{
+ width:62px;height:62px;display:grid;place-items:center;border-radius:19px;
+ background:var(--panel2);border:1px solid var(--border);font-size:31px;
+}
+.social-platform{font-size:11px;color:var(--muted);font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
+.social-card h3{font-size:25px;margin:20px 0 5px}
+.social-handle{color:var(--accent);font-weight:900;font-size:14px}
+.social-card p{color:var(--muted);line-height:1.65;margin:12px 0 22px;max-width:440px}
+.social-link{
+ display:inline-flex;align-items:center;gap:9px;margin-top:auto;text-decoration:none;
+ color:white;background:linear-gradient(135deg,#567cff,#925df3);
+ padding:12px 17px;border-radius:12px;font-weight:900;font-size:13px;transition:filter .2s,transform .2s;
+}
+.social-card.tiktok .social-link{background:linear-gradient(110deg,#111 0%,#222 45%,#fe2c55 100%);border:1px solid rgba(255,255,255,.15)}
+.social-card.youtube .social-link{background:linear-gradient(110deg,#d9152b,#ff554e)}
+.social-link:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.social-note{margin-top:17px;padding:16px 18px;border-radius:15px;background:var(--panel);border:1px solid var(--border);color:var(--muted);font-size:13px;line-height:1.6}
+.social-note b{color:var(--text)}
 .social-back{margin-top:20px;border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:11px 16px;border-radius:10px;font-weight:bold}
-@media(max-width:580px){.social-grid{grid-template-columns:1fr}}
-
+@media(max-width:580px){.social-grid{grid-template-columns:1fr}.social-card{min-height:250px}}
 @media(max-width:850px){
  .hero{grid-template-columns:1fr}
  .roles{grid-template-columns:repeat(3,1fr)}
@@ -497,26 +531,36 @@ footer{
  <!-- SOCIALS PAGE -->
  <section class="social-page" id="socialsPage">
   <div class="panel social-hero">
-   <div class="eyebrow">CONNECT WITH TAGZZ</div>
-   <h2>🌐 My Socials</h2>
-   <p>Follow my channels for Yeeps videos, clips, and updates!</p>
+   <div class="social-kicker"><i></i> OFFICIAL SOCIAL LINKS</div>
+   <h2>Let’s connect. <span style="color:var(--accent)">💙</span></h2>
+   <p>Catch the latest Yeeps videos, funny moments, clips, and updates. Pick a platform below and come say hi!</p>
   </div>
+
   <div class="social-grid">
-   <article class="social-card">
-    <div class="social-icon">▶️</div>
+   <article class="social-card youtube">
+    <div class="social-card-top">
+     <div class="social-icon">▶️</div>
+     <div class="social-platform">Video channel</div>
+    </div>
     <h3>YouTube</h3>
     <div class="social-handle">@tagzziscool</div>
-    <p>Subscribe to my YouTube channel for videos and Yeeps content.</p>
-    <a class="social-link" href="https://youtube.com/@tagzziscool" target="_blank" rel="noopener noreferrer">Visit YouTube ↗</a>
+    <p>Yeeps videos, highlights, and more. Subscribe so you don’t miss the next upload!</p>
+    <a class="social-link" href="https://youtube.com/@tagzziscool" target="_blank" rel="noopener noreferrer">Visit YouTube <span>↗</span></a>
    </article>
-   <article class="social-card">
-    <div class="social-icon">🎵</div>
+
+   <article class="social-card tiktok">
+    <div class="social-card-top">
+     <div class="social-icon">🎵</div>
+     <div class="social-platform">Short-form clips</div>
+    </div>
     <h3>TikTok</h3>
     <div class="social-handle">@tagzzvr</div>
-    <p>Follow my TikTok for Yeeps videos, clips, and updates.</p>
-    <a class="social-link" href="https://www.tiktok.com/@tagzzvr" target="_blank" rel="noopener noreferrer">Visit TikTok ↗</a>
+    <p>Quick Yeeps clips, funny moments, and fresh content. Follow for the latest posts!</p>
+    <a class="social-link" href="https://www.tiktok.com/@tagzzvr" target="_blank" rel="noopener noreferrer">Visit TikTok <span>↗</span></a>
    </article>
   </div>
+
+  <div class="social-note"><b>💙 Thanks for the support!</b> Every follow, like, and view helps the content grow.</div>
   <button class="social-back" type="button" id="backToDirectory">← Back to Player Directory</button>
  </section>
 

@@ -236,6 +236,15 @@ h1 span{color:var(--accent)}
  height:68px;
  margin:0 auto 7px;
  background:#514078;
+ filter:
+  drop-shadow(2px 0 0 #fff)
+  drop-shadow(-2px 0 0 #fff)
+  drop-shadow(0 2px 0 #fff)
+  drop-shadow(0 -2px 0 #fff)
+  drop-shadow(1.5px 1.5px 0 #fff)
+  drop-shadow(-1.5px 1.5px 0 #fff)
+  drop-shadow(1.5px -1.5px 0 #fff)
+  drop-shadow(-1.5px -1.5px 0 #fff);
  -webkit-mask-image:url("./assets/shield_blue_cutout.png");
  mask-image:url("./assets/shield_blue_cutout.png");
  -webkit-mask-repeat:no-repeat;
@@ -896,7 +905,7 @@ function roleLogoPath(role){
 
 function roleLogoMarkup(role, className="role-logo"){
  if(role==="Prime Moderator"){
-  return `<img class="${className}" src="https://imgz.co/i/Photoroom-20261107-174903.v0qJ" alt="Prime Moderator logo">`;
+  return `<span class="${className} prime-moderator-logo" role="img" aria-label="Prime Moderator logo"></span>`;
  }
  const src=roleLogoPath(role);
  return src?`<img class="${className}" src="./${src}?v=20261107-dev3" alt="${esc(role)} logo" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/tagzzvr-cmyk/YeepsHub/main/${src}'">`:"";

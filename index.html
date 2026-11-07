@@ -206,6 +206,12 @@ h1 span{color:var(--accent)}
  margin:0 auto 7px;
  overflow:visible;
 }
+/* White outline around the uploaded Prime Moderator shield. */
+.role-logo[alt="Prime Moderator logo"],
+.badge img[alt="Prime Moderator logo"]{
+ filter:drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
+        drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+}
 /* Give the original Developer logo a little more room without cropping it. */
 .role-logo[alt="Developer logo"]{
  width:96px;

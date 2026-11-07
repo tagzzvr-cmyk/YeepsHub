@@ -785,9 +785,9 @@ function roleLogoPath(role){
 
 function roleLogoMarkup(role, className="role-logo"){
  if(role==="Game Moderator"){
-  return `<svg class="${className}" viewBox="0 0 64 64" role="img" aria-label="Light blue shield">
-   <path d="M32 4 55 13v16c0 15-9 25-23 31C18 54 9 44 9 29V13L32 4Z" fill="#8edcff" stroke="#d8f5ff" stroke-width="3" stroke-linejoin="round"/>
-   <path d="M32 11 48 17v12c0 10-5.8 18-16 23-10.2-5-16-13-16-23V17l16-6Z" fill="#b9edff" opacity=".55"/>
+  return `<svg class="${className}" viewBox="0 0 300 280" role="img" aria-label="Light blue shield">
+   <path d="M150 10 278 58v76c0 73-49 117-128 146C71 251 22 207 22 134V58L150 10Z" fill="#fff"/>
+   <path d="M150 31 255 70v64c0 60-39 98-105 124-66-26-105-64-105-124V70l105-39Z" fill="#8edcff"/>
   </svg>`;
  }
  const src=roleLogoPath(role);

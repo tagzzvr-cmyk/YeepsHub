@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeeps Hub | Tagzz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #080d1c;
+  --panel: #121c36;
+  --panel2: #192648;
+  --text: #ffffff;
+  --muted: #9caed1;
+  --accent: #718cff;
+  --border: #ffffff18;
+}
+
+body.light {
+  --bg: #edf2ff;
+  --panel: #ffffff;
+  --panel2: #e5ebff;
+  --text: #17213d;
+  --muted: #65718d;
+  --accent: #526ff0;
+  --border: #17213d18;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: .25s;
+}
+
+header {
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6%;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+nav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+nav button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 9px;
+}
+
+nav button:hover,
+nav button.active {
+  color: var(--accent);
+  background: var(--panel2);
+}
+
+.theme {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 10px 13px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 55px 25px;
+}
+
+.page {
+  display: none;
+  animation: appear .25s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero {
+  padding: 55px 35px;
+  background: linear-gradient(135deg,#17264b,#34347d,#222a56);
+  border-radius: 23px;
+  text-align: center;
+  color: white;
+  margin-bottom: 35px;
+}
+
+.hero h1 {
+  font-size: 43px;
+  margin-bottom: 14px;
+}
+
+.hero p {
+  color: #d1dcff;
+  line-height: 1.6;
+}
+
+.section-title {
+  font-size: 27px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
+  gap: 18px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  padding: 25px;
+  transition: .2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.card h2 {
+  margin-bottom: 10px;
+}
+
+.card p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.social-icon {
+  font-size: 42px;
+  margin-bottom: 17px;
+}
+
+.handle {
+  margin: 10px 0 20px;
+  color: var(--muted);
+}
+
+.link {
+  display: inline-block;
+  background: linear-gradient(90deg,#536dfe,#8758e8);
+  color: white;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 9px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.link:hover {
+  opacity: .8;
+}
+
+.info {
+  background: var(--panel2);
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  margin-top: 50px;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media(max-width:650px) {
+  header {
+    height: auto;
+    padding: 17px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  nav {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  nav button {
+    white-space: nowrap;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  main {
+    padding: 30px 16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">YEEPS HUB</div>
+
+  <nav>
+    <button class="active" onclick="showPage('home',this)">Home</button>
+    <button onclick="showPage('socials',this)">Socials</button>
+    <button onclick="showPage('about',this)">About</button>
+  </nav>
+
+  <button class="theme" onclick="toggleTheme()">☀️ / 🌙</button>
+</header>
+
+<main>
+
+<!-- HOME PAGE -->
+<section class="page active" id="home">
+
+  <div class="hero">
+    <h1>Welcome to Yeeps Hub</h1>
+    <p>Your central place for everything Yeeps.</p>
+    <p>Created and managed by Tagzz.</p>
+  </div>
+
+  <h2 class="section-title">Explore Yeeps Hub</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <h2>🌐 Socials</h2>
+      <p>Find all of Tagzz's social media accounts in one place.</p>
+      <br>
+      <a class="link" href="#" onclick="showPage('socials',document.querySelectorAll('nav button')[1]);return false;">Explore Socials</a>
+    </div>
+
+    <div class="card">
+      <h2>🎮 Yeeps</h2>
+      <p>Your hub for Yeeps community content and updates.</p>
+    </div>
+
+    <div class="card">
+      <h2>👑 About</h2>
+      <p>Learn more about Yeeps Hub and its creator.</p>
+      <br>
+      <a class="link" href="#" onclick="showPage('about',document.querySelectorAll('nav button')[2]);return false;">Learn More</a>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- SOCIALS PAGE -->
+<section class="page" id="socials">
+
+  <div class="hero">
+    <h1>🌐 My Socials</h1>
+    <p>Follow Tagzz across social media!</p>
+  </div>
+
+  <h2 class="section-title">My Channels</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="social-icon">▶️</div>
+      <h2>YouTube</h2>
+      <div class="handle">@tagzziscool</div>
+      <p>Subscribe to my YouTube channel for videos and Yeeps content.</p>
+      <br>
+      <a class="link"
+      href="https://youtube.com/@tagzziscool"
+      target="_blank" rel="noopener noreferrer">
+      Visit YouTube ↗
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="social-icon">🎵</div>
+      <h2>TikTok</h2>
+      <div class="handle">@tagzzvr</div>
+      <p>Follow my TikTok for Yeeps videos, clips and updates.</p>
+      <br>
+      <a class="link"
+      href="https://www.tiktok.com/@tagzzvr"
+      target="_blank" rel="noopener noreferrer">
+      Visit TikTok ↗
+      </a>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ABOUT PAGE -->
+<section class="page" id="about">
+
+  <div class="hero">
+    <h1>About Yeeps Hub</h1>
+    <p>Everything Yeeps, all in one place.</p>
+  </div>
+
+  <div class="card">
+    <h2>👑 Created by Tagzz</h2>
+    <p>
+      Yeeps Hub is a community-focused project created by Tagzz.
+      Its purpose is to bring Yeeps-related information,
+      content and useful resources together.
+    </p>
+  </div>
+
+  <div class="info">
+    <h3>💙 Our Goal</h3>
+    <p>Build a place for the Yeeps community to connect and explore.</p>
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+  © 2026 Yeeps Hub | Created by Tagzz
+</footer>
+
+<script>
+
+function showPage(page,button) {
+
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  document.getElementById(page).classList.add('active');
+
+  document.querySelectorAll('nav button').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  if(button) button.classList.add('active');
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('light');
+}
+
+</script>
+
+</body>
+</html>

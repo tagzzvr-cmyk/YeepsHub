@@ -840,7 +840,7 @@ function roleLogoPath(role){
 
 function roleLogoMarkup(role, className="role-logo"){
  if(role==="Prime Moderator"){
-  return `<span class="${className} prime-moderator-logo" role="img" aria-label="Prime Moderator logo"></span>`;
+  return `<img class="${className}" src="https://imgz.co/i/Photoroom-20261107-174903.v0qJ" alt="Prime Moderator logo">`;
  }
  const src=roleLogoPath(role);
  return src?`<img class="${className}" src="./${src}?v=20261107-dev3" alt="${esc(role)} logo" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/tagzzvr-cmyk/YeepsHub/main/${src}'">`:"";

@@ -805,7 +805,7 @@ function roleLogoPath(role){
 function roleLogoMarkup(role, className="role-logo"){
  const src=roleLogoPath(role);
  const fallback=roleEmoji(role);
- return src?`<img class="${className}" src="/YeepsHub/${src}?v=20261107" alt="${esc(role)} logo" onerror="this.outerHTML='<span class=role-fallback>${fallback}</span>'">`:"";
+ return src?`<img class="${className}" src="/YeepsHub/${src}?v=20261107-dev2" alt="${esc(role)} logo" onerror="this.outerHTML='<span class=role-fallback>${fallback}</span>'">`:"";
 }
 
 function roleBadge(role){

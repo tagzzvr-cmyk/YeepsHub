@@ -753,7 +753,21 @@ const INITIAL = [
  {name:"NotYoCheeseW",roles:["Star Program","Star Creator"]},
  {name:"Pufff Bros",roles:["Star Program","Star Creator"]},
  {name:"TomLabs",roles:["Star Program","Star Creator"]},
- {name:"Nugget",roles:["Star Program","Star Creator"]}
+ {name:"Nugget",roles:["Star Program","Star Creator"]},
+ {name:"Gustavo",roles:["Developer"]},
+ {name:"Mav",roles:["Developer"]},
+ {name:"John Kp",roles:["Developer"]},
+ {name:"Brian",roles:["Developer"]},
+ {name:"Cindy",roles:["Developer"]},
+ {name:"chimpstiene",roles:["Developer"]},
+ {name:"Due",roles:["Developer"]},
+ {name:"Eric",roles:["Developer"]},
+ {name:"Jayshay",roles:["Developer"]},
+ {name:"Julian",roles:["Developer"]},
+ {name:"Nadir",roles:["Developer"]},
+ {name:"NE0NPuffin",roles:["Developer"]},
+ {name:"schmix",roles:["Developer"]},
+ {name:"Trice",roles:["Developer"]}
 ];
 
 /* ======================================
@@ -819,6 +833,35 @@ for(const name of STAR_ROSTER){
   if(!player.roles.includes(role))player.roles.push(role);
  }
 }
+/* YEEPS DEVELOPER ROSTER
+   Merge these developers into saved browser data too. */
+const DEVELOPER_ROSTER = [
+ "Gustavo",
+ "Mav",
+ "John Kp",
+ "Brian",
+ "Cindy",
+ "chimpstiene",
+ "Due",
+ "Eric",
+ "Jayshay",
+ "Julian",
+ "Nadir",
+ "NE0NPuffin",
+ "schmix",
+ "Trice"
+];
+
+for(const name of DEVELOPER_ROSTER){
+ let player=players.find(p=>p.name.toLowerCase()===name.toLowerCase());
+ if(!player){
+  player={name,roles:[]};
+  players.push(player);
+ }
+ if(!Array.isArray(player.roles))player.roles=[];
+ if(!player.roles.includes("Developer"))player.roles.push("Developer");
+}
+
 localStorage.setItem("yeepshub_players",JSON.stringify(players));
 
 function save(){

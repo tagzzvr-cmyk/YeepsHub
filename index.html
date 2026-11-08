@@ -357,6 +357,14 @@ h1 span{color:var(--accent)}
  background:#6878ff;
  color:white;
 }
+.picture-submit{margin:22px 0;line-height:1.6}
+.picture-submit p{color:var(--muted)}
+.picture-submit input{width:100%;padding:12px;margin:7px 0 12px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text)}
+.picture-review{margin:18px 0;padding:18px;border:1px solid var(--border);border-radius:14px;background:var(--panel)}
+.submission-item{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--border)}
+.submission-item img{width:58px;height:58px;object-fit:cover;border-radius:12px}
+.submission-item .submission-info{flex:1;min-width:150px;overflow-wrap:anywhere}
+.avatar-image{width:43px;height:43px;border-radius:14px;object-fit:cover;flex-shrink:0}
 .about{
  margin-top:30px;
  line-height:1.7;
@@ -499,7 +507,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.48</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.49</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -548,6 +556,18 @@ footer{
   <input id="search" placeholder="🔎 Search players by username...">
  </div>
 
+ <section class="panel picture-submit">
+  <div class="eyebrow">HELP IMPROVE YEEPSHUB</div>
+  <h2>Submit a Profile Picture</h2>
+  <p>Anyone helping with YeepsHub can suggest a profile picture. Paste a direct image link; submissions are reviewed before appearing on profiles.</p>
+  <label for="pictureUsername">Player username</label>
+  <input id="pictureUsername" type="text" maxlength="70" placeholder="Exact Yeeps username">
+  <label for="pictureUrl">Image URL</label>
+  <input id="pictureUrl" type="url" maxlength="1000" placeholder="https://...">
+  <button class="action" id="submitPicture">Submit for Approval</button>
+  <p id="pictureSubmitStatus" aria-live="polite"></p>
+ </section>
+
  <div class="section-title">
   <h2>Explore roles</h2>
   <p>Select a role to filter the directory.</p>
@@ -564,7 +584,13 @@ footer{
   <button class="action" id="addBtn">＋ Add Player</button>
   <button class="action" id="exportBtn">Export Backup</button>
   <button class="action" id="resetBtn">Reset Original List</button>
+  <button class="action" id="reviewPicturesBtn">Review Picture Submissions</button>
  </div>
+ <section class="picture-review" id="pictureReview" style="display:none">
+  <h2>Pending Profile Pictures</h2>
+  <p style="color:var(--muted)">Approve a picture to publish it on that player's profile.</p>
+  <div id="pictureSubmissionList">Loading submissions…</div>
+ </section>
 
  <section class="players" id="players"></section>
 
@@ -646,7 +672,7 @@ footer{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js?v=140"></script>
+<script src="./supabase-config.js?v=141"></script>
 <script>
 /* ======================================
    YEEPSHUB PLAYER DATA
@@ -794,6 +820,7 @@ try{
 let activeRole="All";
 let owner=false;
 let editing=null;
+let profilePictures={};
 
 /* STAR PROGRAM + STAR CREATOR ROSTER
    These 12 members have BOTH roles. Merge into saved
@@ -1041,9 +1068,9 @@ function render(){
  host.innerHTML=visible.map(p=>`
   <article class="player">
    <div class="player-top">
-    <div class="avatar">
-     ${esc(avatarInitial(p.name))}
-    </div>
+    ${profilePictures[searchableName(p.name)]
+     ?`<img class="avatar-image" src="${esc(profilePictures[searchableName(p.name)])}" alt="${esc(p.name)} profile picture" loading="lazy">`
+     :`<div class="avatar">${esc(avatarInitial(p.name))}</div>`}
     <div style="min-width:0;flex:1">
      <div class="player-name">${esc(p.name)}</div>
      <div class="player-sub">
@@ -1096,7 +1123,7 @@ if(localStorage.getItem("yeepshub_theme")==="light"){
 }
 
 /* EMAIL-ONLY OWNER AUTH */
-function setOwnerMode(ok){owner=ok;document.getElementById("ownerBtn").textContent=ok?"Lock Dashboard":"Owner Login";document.getElementById("admin").classList.toggle("show",ok);render();}
+function setOwnerMode(ok){owner=ok;document.getElementById("ownerBtn").textContent=ok?"Lock Dashboard":"Owner Login";document.getElementById("admin").classList.toggle("show",ok);document.getElementById("pictureReview").style.display="none";render();if(ok)loadPictureSubmissions();}
 document.getElementById("ownerBtn").onclick=async()=>{if(owner){if(supabaseClient)await supabaseClient.auth.signOut();setOwnerMode(false);}else{document.getElementById("loginError").textContent="";openModal("loginModal");}};
 document.getElementById("loginSubmit").onclick=async()=>{const e=document.getElementById("loginError");if(!supabaseReady){e.textContent="Backend setup is unfinished. Configure supabase-config.js first.";return;}const btn=document.getElementById("loginSubmit");btn.disabled=true;const {error}=await supabaseClient.auth.signInWithOtp({email:OWNER_EMAIL,options:{emailRedirectTo:location.origin+location.pathname}});btn.disabled=false;e.textContent=error?error.message:"Sign-in link sent. Check your email.";};
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(async(_event,session)=>{const email=session?.user?.email?.toLowerCase();if(email===OWNER_EMAIL){setOwnerMode(true);closeModal("loginModal");}else if(session){await supabaseClient.auth.signOut();setOwnerMode(false);document.getElementById("loginError").textContent="This email is not authorized.";}else setOwnerMode(false);});supabaseClient.auth.getSession().then(({data})=>{if(data.session?.user?.email?.toLowerCase()===OWNER_EMAIL)setOwnerMode(true);});}
@@ -1105,6 +1132,57 @@ function browserId(){let id=localStorage.getItem("yeepshub_anon_browser");if(!id
 async function recordPageView(){if(supabaseReady){try{await supabaseClient.from("site_visits").insert({visitor_id:browserId()});}catch(_e){}}}
 async function loadTrackerStats(){const status=document.getElementById("trackerStatus");if(!supabaseReady){status.textContent="Site statistics are temporarily unavailable.";return;}status.textContent="Loading…";const {data,error}=await supabaseClient.rpc("get_public_site_stats");if(error){status.textContent="Could not load statistics yet. The public stats database update may still need to be applied.";return;}const stats=Array.isArray(data)?data[0]:data;if(!stats){status.textContent="No statistics are available yet.";return;}document.getElementById("visitTotal").textContent=Number(stats.total_visits||0).toLocaleString();document.getElementById("visitorUnique").textContent=Number(stats.unique_visitors||0).toLocaleString();document.getElementById("visitToday").textContent=Number(stats.visits_today||0).toLocaleString();status.textContent="Page views and unique browsers over the last 30 days. Today's count uses UTC. Only aggregate totals are public.";}
 recordPageView();
+
+/* PROFILE PICTURE SUBMISSIONS */
+async function loadApprovedPictures(){
+ if(!supabaseClient)return;
+ const {data,error}=await supabaseClient.from("player_profile_pictures").select("username,image_url");
+ if(error)return;
+ profilePictures={};
+ (data||[]).forEach(row=>profilePictures[searchableName(row.username)]=row.image_url);
+ render();
+}
+async function submitProfilePicture(){
+ const status=document.getElementById("pictureSubmitStatus");
+ const username=document.getElementById("pictureUsername").value.trim();
+ const imageUrl=document.getElementById("pictureUrl").value.trim();
+ if(!username||!imageUrl){status.textContent="Enter both a username and an image URL.";return;}
+ if(!/^https:\/\//i.test(imageUrl)){status.textContent="Please use a secure https:// image link.";return;}
+ if(!supabaseClient){status.textContent="The submission backend is not configured yet.";return;}
+ const btn=document.getElementById("submitPicture");btn.disabled=true;status.textContent="Submitting…";
+ const {error}=await supabaseClient.from("profile_picture_submissions").insert({username,image_url:imageUrl});
+ btn.disabled=false;
+ status.textContent=error?"Could not submit. The profile-picture database setup may still be needed.":"Submitted! Your picture will appear after owner approval.";
+ if(!error){document.getElementById("pictureUsername").value="";document.getElementById("pictureUrl").value="";}
+}
+async function loadPictureSubmissions(){
+ const host=document.getElementById("pictureSubmissionList");
+ if(!owner||!supabaseClient)return;
+ host.textContent="Loading…";
+ const {data,error}=await supabaseClient.from("profile_picture_submissions").select("id,username,image_url,created_at").order("created_at",{ascending:true});
+ if(error){host.textContent="Could not load submissions. Check that the profile-picture SQL setup has been run.";return;}
+ if(!data?.length){host.textContent="No pending submissions.";return;}
+ host.innerHTML=data.map(item=>`<div class="submission-item"><img src="${esc(item.image_url)}" alt="Submitted profile picture" loading="lazy"><div class="submission-info"><b>${esc(item.username)}</b><br><small>${new Date(item.created_at).toLocaleString()}</small><br><a href="${esc(item.image_url)}" target="_blank" rel="noopener noreferrer">Open image</a></div><button class="action" data-approve-picture="${item.id}">Approve</button><button class="action danger" data-reject-picture="${item.id}">Reject</button></div>`).join("");
+ host.querySelectorAll("[data-approve-picture]").forEach(btn=>btn.onclick=()=>approvePicture(Number(btn.dataset.approvePicture)));
+ host.querySelectorAll("[data-reject-picture]").forEach(btn=>btn.onclick=()=>rejectPicture(Number(btn.dataset.rejectPicture)));
+}
+async function approvePicture(id){
+ if(!owner)return;
+ const {data,error}=await supabaseClient.from("profile_picture_submissions").select("id,username,image_url").eq("id",id).single();
+ if(error||!data){alert("Could not load that submission.");return;}
+ const {error:saveError}=await supabaseClient.from("player_profile_pictures").upsert({username:data.username,image_url:data.image_url,updated_at:new Date().toISOString()},{onConflict:"username"});
+ if(saveError){alert("Could not approve this picture. Check the SQL setup.");return;}
+ await supabaseClient.from("profile_picture_submissions").delete().eq("id",id);
+ await loadApprovedPictures();await loadPictureSubmissions();
+}
+async function rejectPicture(id){
+ if(!owner||!confirm("Reject and remove this submission?"))return;
+ const {error}=await supabaseClient.from("profile_picture_submissions").delete().eq("id",id);
+ if(error){alert("Could not remove this submission.");return;}
+ loadPictureSubmissions();
+}
+document.getElementById("submitPicture").onclick=submitProfilePicture;
+document.getElementById("reviewPicturesBtn").onclick=()=>{const panel=document.getElementById("pictureReview");panel.style.display=panel.style.display==="none"?"block":"none";if(panel.style.display==="block")loadPictureSubmissions();};
 
 /* ADD AND EDIT PLAYERS */
 
@@ -1227,6 +1305,7 @@ document.getElementById("resetBtn").onclick=()=>{
 /* START */
 
 render();
+loadApprovedPictures();
 </script>
 </body>
 </html>

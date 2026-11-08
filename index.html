@@ -499,7 +499,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.46</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.47</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -646,7 +646,7 @@ footer{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js?v=138"></script>
+<script src="./supabase-config.js?v=139"></script>
 <script>
 /* ======================================
    YEEPSHUB PLAYER DATA
@@ -870,8 +870,11 @@ for(const name of DEVELOPER_ROSTER){
 
 /* DISCORD MODERATOR ROSTER
    Ensure newly added moderators appear for visitors with older saved lists. */
-const MIA_ROSTER = ["« ✦ 𝑀𝑖𝑎 ✦ »"];
-for(const name of MIA_ROSTER){
+const DISCORD_MODERATOR_ROSTER = [
+ "« ✦ 𝑀𝑖𝑎 ✦ »",
+ "LinkNotAbe"
+];
+for(const name of DISCORD_MODERATOR_ROSTER){
  let player=players.find(p=>p.name.toLowerCase()===name.toLowerCase());
  if(!player){player={name,roles:[]};players.push(player);}
  if(!Array.isArray(player.roles))player.roles=[];

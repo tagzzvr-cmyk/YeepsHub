@@ -499,7 +499,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.43</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.44</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -646,7 +646,7 @@ footer{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js?v=135"></script>
+<script src="./supabase-config.js?v=136"></script>
 <script>
 /* ======================================
    YEEPSHUB PLAYER DATA
@@ -881,6 +881,11 @@ function esc(value){
  }[c]));
 }
 
+function avatarInitial(name){
+ const normalized=String(name).normalize("NFKD");
+ return normalized.match(/[A-Za-z0-9]/)?.[0].toUpperCase()||"?";
+}
+
 function roleClass(role){
  return ROLES.find(r=>r[0]===role)?.[2]||"";
 }
@@ -999,7 +1004,7 @@ function render(){
   <article class="player">
    <div class="player-top">
     <div class="avatar">
-     ${esc(p.name.charAt(0).toUpperCase()||"?")}
+     ${esc(avatarInitial(p.name))}
     </div>
     <div style="min-width:0;flex:1">
      <div class="player-name">${esc(p.name)}</div>

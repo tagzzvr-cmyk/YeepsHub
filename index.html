@@ -499,7 +499,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.45</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.46</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -646,7 +646,7 @@ footer{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js?v=137"></script>
+<script src="./supabase-config.js?v=138"></script>
 <script>
 /* ======================================
    YEEPSHUB PLAYER DATA
@@ -891,9 +891,15 @@ function esc(value){
  }[c]));
 }
 
+function searchableName(name){
+ return String(name).normalize("NFKD")
+  .replace(/[\\u0300-\\u036f]/g,"")
+  .replace(/[^a-z0-9]/gi,"")
+  .toLowerCase();
+}
+
 function avatarInitial(name){
- const normalized=String(name).normalize("NFKD");
- return normalized.match(/[A-Za-z0-9]/)?.[0].toUpperCase()||"?";
+ return searchableName(name).match(/[a-z0-9]/)?.[0].toUpperCase()||"?";
 }
 
 function roleClass(role){
@@ -986,16 +992,15 @@ function setRole(role){
 function render(){
  renderRoles();
 
- const query=document.getElementById("search").value
-  .toLowerCase().trim();
+ const query=searchableName(document.getElementById("search").value);
 
  const visible=players
   .map((p,index)=>({...p,index}))
   .filter(p=>
-   p.name.toLowerCase().includes(query)&&
+   searchableName(p.name).includes(query)&&
    (activeRole==="All"||p.roles.includes(activeRole))
   )
-  .sort((a,b)=>a.name.localeCompare(b.name));
+  .sort((a,b)=>searchableName(a.name).localeCompare(searchableName(b.name)));
 
  document.getElementById("totalCount").textContent=players.length;
 

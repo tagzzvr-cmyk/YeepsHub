@@ -96,6 +96,7 @@ nav button:hover,nav button.active{
  background:var(--panel2);
  font-weight:bold;
 }
+.top-actions #trackerNav.active{border-color:var(--accent);color:var(--accent);}
 #ownerBtn{
  background:linear-gradient(135deg,#567cff,#925df3);
  color:white;
@@ -492,10 +493,10 @@ footer{
   <button data-role="Star Program">Star Program</button>
   <button data-role="Developer">Developers</button>
   <button id="socialsNav" type="button">Socials</button>
-  <button id="trackerNav" type="button" style="display:none">Site Tracker</button>
  </nav>
 
  <div class="top-actions">
+  <button id="trackerNav" type="button">📊 Site Tracker</button>
   <button id="themeBtn">☀️ Light</button>
   <button id="ownerBtn">Owner Login</button>
  </div>
@@ -557,7 +558,7 @@ footer{
   <p><b>Multiple roles:</b> Players can have several roles at once. Their badges stack on their profiles.</p>
  </section>
 
- <section class="panel" id="trackerPage" style="display:none"><div class="eyebrow">PRIVATE OWNER DASHBOARD</div><h2>Site Tracker</h2><p style="color:var(--muted)">Anonymous traffic only. No visitor names, emails, or IP addresses are collected.</p><div class="stats"><div class="stat"><strong id="visitTotal">—</strong><small>Page views (30 days)</small></div><div class="stat"><strong id="visitorUnique">—</strong><small>Unique browsers (approx.)</small></div><div class="stat"><strong id="visitToday">—</strong><small>Page views today</small></div></div><p id="trackerStatus" style="color:var(--muted);font-size:13px;margin-top:16px">Backend setup is required.</p><button class="secondary" id="refreshTracker" type="button">Refresh statistics</button></section>
+ <section class="panel" id="trackerPage" style="display:none"><div class="eyebrow">PUBLIC SITE STATISTICS</div><h2>Site Tracker</h2><p style="color:var(--muted)">Live site traffic totals. Visitor identities and browser IDs are never shown.</p><div class="stats"><div class="stat"><strong id="visitTotal">—</strong><small>Page views (30 days)</small></div><div class="stat"><strong id="visitorUnique">—</strong><small>Unique browsers (approx.)</small></div><div class="stat"><strong id="visitToday">—</strong><small>Page views today</small></div></div><p id="trackerStatus" style="color:var(--muted);font-size:13px;margin-top:16px">Backend setup is required.</p><button class="secondary" id="refreshTracker" type="button">Refresh statistics</button></section>
 
  <!-- SOCIALS PAGE -->
  <section class="social-page" id="socialsPage">
@@ -904,9 +905,10 @@ function showDirectory(){
  document.getElementById("trackerPage").style.display="none";
  document.getElementById("socialsPage").classList.remove("active");
  document.getElementById("socialsNav").classList.remove("active");
+ document.getElementById("trackerNav").classList.remove("active");
 }
 
-function showTracker(){document.querySelectorAll("main > *").forEach(s=>s.style.display="none");document.getElementById("trackerPage").style.display="block";document.querySelectorAll("#nav button").forEach(b=>b.classList.remove("active"));document.getElementById("trackerNav").classList.add("active");loadTrackerStats();window.scrollTo({top:0,behavior:"smooth"});}
+function showTracker(){document.querySelectorAll("main > *").forEach(s=>s.style.display="none");document.getElementById("trackerPage").style.display="block";document.querySelectorAll("#nav button").forEach(b=>b.classList.remove("active"));document.getElementById("socialsNav").classList.remove("active");document.getElementById("trackerNav").classList.add("active");loadTrackerStats();window.scrollTo({top:0,behavior:"smooth"});}
 
 function showSocials(){
  document.querySelectorAll("main > *").forEach(section=>{section.style.display="none";});
@@ -915,6 +917,7 @@ function showSocials(){
  page.classList.add("active");
  document.querySelectorAll("#nav button").forEach(btn=>btn.classList.remove("active"));
  document.getElementById("socialsNav").classList.add("active");
+ document.getElementById("trackerNav").classList.remove("active");
  window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -1017,14 +1020,14 @@ if(localStorage.getItem("yeepshub_theme")==="light"){
 }
 
 /* EMAIL-ONLY OWNER AUTH */
-function setOwnerMode(ok){owner=ok;document.getElementById("ownerBtn").textContent=ok?"Lock Dashboard":"Owner Login";document.getElementById("admin").classList.toggle("show",ok);document.getElementById("trackerNav").style.display=ok?"":"none";if(!ok&&document.getElementById("trackerPage").style.display!=="none")showDirectory();render();}
+function setOwnerMode(ok){owner=ok;document.getElementById("ownerBtn").textContent=ok?"Lock Dashboard":"Owner Login";document.getElementById("admin").classList.toggle("show",ok);render();}
 document.getElementById("ownerBtn").onclick=async()=>{if(owner){if(supabaseClient)await supabaseClient.auth.signOut();setOwnerMode(false);}else{document.getElementById("loginError").textContent="";openModal("loginModal");}};
 document.getElementById("loginSubmit").onclick=async()=>{const e=document.getElementById("loginError");if(!supabaseReady){e.textContent="Backend setup is unfinished. Configure supabase-config.js first.";return;}const btn=document.getElementById("loginSubmit");btn.disabled=true;const {error}=await supabaseClient.auth.signInWithOtp({email:OWNER_EMAIL,options:{emailRedirectTo:location.origin+location.pathname}});btn.disabled=false;e.textContent=error?error.message:"Sign-in link sent. Check your email.";};
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(async(_event,session)=>{const email=session?.user?.email?.toLowerCase();if(email===OWNER_EMAIL){setOwnerMode(true);closeModal("loginModal");}else if(session){await supabaseClient.auth.signOut();setOwnerMode(false);document.getElementById("loginError").textContent="This email is not authorized.";}else setOwnerMode(false);});supabaseClient.auth.getSession().then(({data})=>{if(data.session?.user?.email?.toLowerCase()===OWNER_EMAIL)setOwnerMode(true);});}
-document.getElementById("trackerNav").onclick=()=>{if(owner)showTracker();};document.getElementById("refreshTracker").onclick=loadTrackerStats;
+document.getElementById("trackerNav").onclick=showTracker;document.getElementById("refreshTracker").onclick=loadTrackerStats;
 function browserId(){let id=localStorage.getItem("yeepshub_anon_browser");if(!id){id=crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2);localStorage.setItem("yeepshub_anon_browser",id);}return id;}
 async function recordPageView(){if(supabaseReady){try{await supabaseClient.from("site_visits").insert({visitor_id:browserId()});}catch(_e){}}}
-async function loadTrackerStats(){const status=document.getElementById("trackerStatus");if(!owner)return;if(!supabaseReady){status.textContent="Configure Supabase to start collecting visits.";return;}status.textContent="Loading…";const since=new Date();since.setDate(since.getDate()-30);const {data,error}=await supabaseClient.from("site_visits").select("visitor_id,created_at").gte("created_at",since.toISOString()).order("created_at",{ascending:false}).limit(10000);if(error){status.textContent="Could not load: "+error.message;return;}const rows=data||[],today=new Date().toISOString().slice(0,10);document.getElementById("visitTotal").textContent=rows.length;document.getElementById("visitorUnique").textContent=new Set(rows.map(r=>r.visitor_id)).size;document.getElementById("visitToday").textContent=rows.filter(r=>r.created_at.slice(0,10)===today).length;status.textContent="Last 30 days. Unique browsers are approximate; no names, emails, or IPs are stored.";}
+async function loadTrackerStats(){const status=document.getElementById("trackerStatus");if(!supabaseReady){status.textContent="Site statistics are temporarily unavailable.";return;}status.textContent="Loading…";const {data,error}=await supabaseClient.rpc("get_public_site_stats");if(error){status.textContent="Could not load statistics yet. The public stats database update may still need to be applied.";return;}const stats=Array.isArray(data)?data[0]:data;if(!stats){status.textContent="No statistics are available yet.";return;}document.getElementById("visitTotal").textContent=Number(stats.total_visits||0).toLocaleString();document.getElementById("visitorUnique").textContent=Number(stats.unique_visitors||0).toLocaleString();document.getElementById("visitToday").textContent=Number(stats.visits_today||0).toLocaleString();status.textContent="Page views and unique browsers over the last 30 days. Today's count uses UTC. Only aggregate totals are public.";}
 recordPageView();
 
 /* ADD AND EDIT PLAYERS */

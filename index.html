@@ -510,7 +510,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.54</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.55</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -525,7 +525,7 @@ footer{
 
  <div class="top-actions">
   <button id="trackerNav" type="button">📊 Site Tracker</button>
-  <a id="updatesNav" href="./updates.html">📰 Recent Updates</a>
+  <button id="updatesNav" type="button">📰 Recent Updates</button>
   <button id="themeBtn">☀️ Light</button>
   <button id="ownerBtn">Owner Login</button>
  </div>
@@ -604,6 +604,18 @@ footer{
   <h2>Made for the Yeeps community.</h2>
   <p>YeepsHub is an unofficial, fan-made community directory. It helps people discover community members and the roles they hold.</p>
   <p><b>Multiple roles:</b> Players can have several roles at once. Their badges stack on their profiles.</p>
+ </section>
+
+ <section class="panel" id="updatesPage" style="display:none">
+  <div class="eyebrow">YEEPSHUB CHANGELOG</div><h2>📰 Recent Updates</h2>
+  <p style="color:var(--muted)">The five latest changes to YeepsHub.</p>
+  <div id="updatesList" style="display:grid;gap:12px;margin:18px 0"></div>
+  <div class="picture-review"><h3 style="margin-top:0">Add or update an entry</h3>
+   <label for="updateTitle">Update title</label><input id="updateTitle" type="text" maxlength="100" placeholder="Example: Added a new badge" style="width:100%;padding:12px;margin:7px 0 12px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text)">
+   <label for="updateDetails">What changed?</label><textarea id="updateDetails" maxlength="600" placeholder="Describe the update..." style="width:100%;min-height:90px;padding:12px;margin:7px 0 12px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text)"></textarea>
+   <button class="action" id="addUpdateBtn" type="button">＋ Add Update</button><button class="secondary" id="restoreUpdatesBtn" type="button">Restore Original 5</button>
+   <p id="updatesStatus" style="color:var(--muted);font-size:12px">Updates are saved in this browser on this device.</p>
+  </div>
  </section>
 
  <section class="panel" id="trackerPage" style="display:none"><div class="eyebrow">PUBLIC SITE STATISTICS</div><h2>Site Tracker</h2><p style="color:var(--muted)">Live site traffic totals. Visitor identities and browser IDs are never shown.</p><div class="stats"><div class="stat"><strong id="visitTotal">—</strong><small>Page views (30 days)</small></div><div class="stat"><strong id="visitorUnique">—</strong><small>Unique browsers (approx.)</small></div><div class="stat"><strong id="visitToday">—</strong><small>Page views today</small></div></div><p id="trackerStatus" style="color:var(--muted);font-size:13px;margin-top:16px">Backend setup is required.</p><button class="secondary" id="refreshTracker" type="button">Refresh statistics</button></section>
@@ -1058,12 +1070,15 @@ function renderRoles(){
 function showDirectory(){
  document.querySelectorAll("main > *").forEach(section=>{section.style.display="";});
  document.getElementById("trackerPage").style.display="none";
+ document.getElementById("updatesPage").style.display="none";
  document.getElementById("socialsPage").classList.remove("active");
  document.getElementById("socialsNav").classList.remove("active");
  document.getElementById("trackerNav").classList.remove("active");
+ document.getElementById("updatesNav").classList.remove("active");
 }
 
-function showTracker(){document.querySelectorAll("main > *").forEach(s=>s.style.display="none");document.getElementById("trackerPage").style.display="block";document.querySelectorAll("#nav button").forEach(b=>b.classList.remove("active"));document.getElementById("socialsNav").classList.remove("active");document.getElementById("trackerNav").classList.add("active");loadTrackerStats();window.scrollTo({top:0,behavior:"smooth"});}
+function showTracker(){document.querySelectorAll("main > *").forEach(s=>s.style.display="none");document.getElementById("trackerPage").style.display="block";document.querySelectorAll("#nav button").forEach(b=>b.classList.remove("active"));document.getElementById("socialsNav").classList.remove("active");document.getElementById("updatesNav").classList.remove("active");document.getElementById("trackerNav").classList.add("active");loadTrackerStats();window.scrollTo({top:0,behavior:"smooth"});}
+function showUpdates(){document.querySelectorAll("main > *").forEach(s=>s.style.display="none");document.getElementById("updatesPage").style.display="block";document.querySelectorAll("#nav button").forEach(b=>b.classList.remove("active"));document.getElementById("socialsNav").classList.remove("active");document.getElementById("trackerNav").classList.remove("active");document.getElementById("updatesNav").classList.add("active");renderUpdates();window.scrollTo({top:0,behavior:"smooth"});}
 
 function showSocials(){
  document.querySelectorAll("main > *").forEach(section=>{section.style.display="none";});
@@ -1073,6 +1088,7 @@ function showSocials(){
  document.querySelectorAll("#nav button").forEach(btn=>btn.classList.remove("active"));
  document.getElementById("socialsNav").classList.add("active");
  document.getElementById("trackerNav").classList.remove("active");
+ document.getElementById("updatesNav").classList.remove("active");
  window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -1178,7 +1194,21 @@ function setOwnerMode(ok){owner=ok;document.getElementById("ownerBtn").textConte
 document.getElementById("ownerBtn").onclick=async()=>{if(owner){if(supabaseClient)await supabaseClient.auth.signOut();setOwnerMode(false);}else{document.getElementById("loginError").textContent="";openModal("loginModal");}};
 document.getElementById("loginSubmit").onclick=async()=>{const e=document.getElementById("loginError");if(!supabaseReady){e.textContent="Backend setup is unfinished. Configure supabase-config.js first.";return;}const btn=document.getElementById("loginSubmit");btn.disabled=true;const {error}=await supabaseClient.auth.signInWithOtp({email:OWNER_EMAIL,options:{emailRedirectTo:location.origin+location.pathname}});btn.disabled=false;e.textContent=error?error.message:"Sign-in link sent. Check your email.";};
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(async(_event,session)=>{const email=session?.user?.email?.toLowerCase();if(email===OWNER_EMAIL){setOwnerMode(true);closeModal("loginModal");}else if(session){await supabaseClient.auth.signOut();setOwnerMode(false);document.getElementById("loginError").textContent="This email is not authorized.";}else setOwnerMode(false);});supabaseClient.auth.getSession().then(({data})=>{if(data.session?.user?.email?.toLowerCase()===OWNER_EMAIL)setOwnerMode(true);});}
-document.getElementById("trackerNav").onclick=showTracker;document.getElementById("refreshTracker").onclick=loadTrackerStats;
+document.getElementById("trackerNav").onclick=showTracker;document.getElementById("updatesNav").onclick=showUpdates;document.getElementById("refreshTracker").onclick=loadTrackerStats;
+
+/* RECENT UPDATES BOARD — embedded in YeepsHub */
+const ORIGINAL_UPDATES=[
+{title:"Owner-only Reset Last Change",details:"Added an owner-only control intended to restore the previous player-list change.",tag:"Feature"},
+{title:"Added ItsInfinity as Prime Moderator",details:"Added ItsInfinity to the Prime Moderator roster while preserving the player's other roles.",tag:"Roster"},
+{title:"Removed Kade and N1CS from Star roles",details:"Removed Kade and N1CS from Star Creator and Star Program.",tag:"Roster"},
+{title:"Profile picture submissions and approvals",details:"Added a submission form and an owner-only review queue to approve or reject pictures.",tag:"Feature"},
+{title:"Custom purple YeepsHub logo",details:"Updated the YeepsHub wordmark with a custom purple Y mark.",tag:"Design"}];
+let recentUpdates;try{const saved=JSON.parse(localStorage.getItem("yeepshub_updates_board")||"null");recentUpdates=Array.isArray(saved)?saved:ORIGINAL_UPDATES.slice();}catch(_e){recentUpdates=ORIGINAL_UPDATES.slice();}
+function renderUpdates(){const host=document.getElementById("updatesList");if(!host)return;host.innerHTML="";recentUpdates.slice(0,5).forEach((item,i)=>{const card=document.createElement("article");card.style.cssText="padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)";const tag=document.createElement("small");tag.textContent=item.tag||"Update";tag.style.cssText="display:inline-block;color:var(--accent);font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px";const title=document.createElement("h3");title.textContent=(i+1)+". "+item.title;title.style.margin="0 0 6px";const details=document.createElement("p");details.textContent=item.details;details.style.cssText="margin:0;color:var(--muted);line-height:1.6";card.append(tag,title,details);host.append(card);});}
+function saveUpdates(){recentUpdates=recentUpdates.slice(0,5);localStorage.setItem("yeepshub_updates_board",JSON.stringify(recentUpdates));renderUpdates();}
+document.getElementById("addUpdateBtn").onclick=()=>{const title=document.getElementById("updateTitle").value.trim(),details=document.getElementById("updateDetails").value.trim();if(!title||!details){document.getElementById("updatesStatus").textContent="Enter both a title and details.";return;}recentUpdates.unshift({title,details,tag:"New"});saveUpdates();document.getElementById("updateTitle").value="";document.getElementById("updateDetails").value="";document.getElementById("updatesStatus").textContent="Update added! The latest five are shown.";};
+document.getElementById("restoreUpdatesBtn").onclick=()=>{if(!confirm("Restore the original five updates?"))return;recentUpdates=ORIGINAL_UPDATES.slice();saveUpdates();document.getElementById("updatesStatus").textContent="Original five updates restored.";};
+
 function browserId(){let id=localStorage.getItem("yeepshub_anon_browser");if(!id){id=crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2);localStorage.setItem("yeepshub_anon_browser",id);}return id;}
 async function recordPageView(){if(supabaseReady){try{await supabaseClient.from("site_visits").insert({visitor_id:browserId()});}catch(_e){}}}
 async function loadTrackerStats(){const status=document.getElementById("trackerStatus");if(!supabaseReady){status.textContent="Site statistics are temporarily unavailable.";return;}status.textContent="Loading…";const {data,error}=await supabaseClient.rpc("get_public_site_stats");if(error){status.textContent="Could not load statistics yet. The public stats database update may still need to be applied.";return;}const stats=Array.isArray(data)?data[0]:data;if(!stats){status.textContent="No statistics are available yet.";return;}document.getElementById("visitTotal").textContent=Number(stats.total_visits||0).toLocaleString();document.getElementById("visitorUnique").textContent=Number(stats.unique_visitors||0).toLocaleString();document.getElementById("visitToday").textContent=Number(stats.visits_today||0).toLocaleString();status.textContent="Page views and unique browsers over the last 30 days. Today's count uses UTC. Only aggregate totals are public.";}

@@ -98,13 +98,16 @@ nav button:hover,nav button.active{
  color:var(--text);
 }
 .top-actions{display:flex;gap:8px}
-.top-actions button{
+.top-actions button,.top-actions a{
  border:1px solid var(--border);
  border-radius:10px;
  padding:10px 12px;
  color:var(--text);
  background:var(--panel2);
  font-weight:bold;
+ text-decoration:none;
+ display:inline-flex;
+ align-items:center;
 }
 .top-actions #trackerNav.active{border-color:var(--accent);color:var(--accent);}
 #ownerBtn{
@@ -507,7 +510,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.53</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.54</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -522,6 +525,7 @@ footer{
 
  <div class="top-actions">
   <button id="trackerNav" type="button">📊 Site Tracker</button>
+  <a id="updatesNav" href="./updates.html">📰 Recent Updates</a>
   <button id="themeBtn">☀️ Light</button>
   <button id="ownerBtn">Owner Login</button>
  </div>

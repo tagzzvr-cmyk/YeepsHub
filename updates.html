@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YeepsHub | Recent Updates</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#141c32;--line:#293653;--text:#edf3ff;--muted:#aab7d1;--accent:#9b7cff;--accent2:#6d8cff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,#20234a 0,#0b1020 48%);font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif;color:var(--text);padding:24px 16px}
+main{max-width:850px;margin:auto}.top{display:flex;align-items:center;gap:12px;margin-bottom:8px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:900;font-size:22px}
+h1{font-size:clamp(25px,5vw,36px);margin:0}.sub{color:var(--muted);margin:0 0 24px}
+.panel{background:rgba(20,28,50,.94);border:1px solid var(--line);border-radius:18px;padding:20px;margin:16px 0;box-shadow:0 12px 36px #0003}
+h2{font-size:19px;margin:0 0 14px}.updates{display:grid;gap:12px}.item{border:1px solid var(--line);border-radius:14px;padding:15px;background:#10182c}
+.item h3{font-size:16px;margin:0 0 5px}.item p{margin:0;color:var(--muted);font-size:14px}.tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#d9ceff;background:#352b61;border:1px solid #5d4b9c;padding:3px 8px;border-radius:99px;margin-bottom:8px}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}input,textarea{width:100%;background:#0b1224;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;font:inherit}textarea{min-height:76px;resize:vertical}
+button,.back{border:0;border-radius:10px;padding:11px 15px;font-weight:750;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;margin-top:12px;text-decoration:none;display:inline-block}
+button.secondary{background:#26324c;border:1px solid var(--line)}.actions{display:flex;gap:9px;flex-wrap:wrap}.hint{color:var(--muted);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body><main>
+<div class="top"><div class="logo">Y</div><div><h1>Recent Updates</h1><div style="color:var(--muted)">YeepsHub • Latest 5 changes</div></div></div>
+<p class="sub">A separate update board for the YeepsHub community.</p>
+<a class="back" href="./index.html">← Back to YeepsHub</a>
+<section class="panel"><h2>Latest 5 updates</h2><div class="updates" id="updates"></div></section>
+<section class="panel"><h2>Add or update an entry</h2>
+<label for="title">Update title</label><input id="title" placeholder="Example: Added a new badge">
+<label for="details">What changed?</label><textarea id="details" placeholder="Describe the update..."></textarea>
+<div class="actions"><button id="save">Add update</button><button class="secondary" id="reset">Restore original 5</button></div>
+<p class="hint">Changes are saved in this browser on this device. New entries move to the top; the board keeps the latest five.</p>
+</section></main>
+<script>
+const original = [
+ {title:"Owner-only Reset Last Change",details:"Added an owner-only control intended to restore the previous player-list change. The latest code commit was pushed; deployment was still queued at the last check.",tag:"Latest"},
+ {title:"Added ItsInfinity as Prime Moderator",details:"Added ItsInfinity to the Prime Moderator roster while preserving the player's other roles.",tag:"Roster"},
+ {title:"Removed Kade and N1CS from Star roles",details:"Removed Kade and N1CS from Star Creator and Star Program, and prevented the roster merge from adding those Star roles back.",tag:"Roster"},
+ {title:"Profile picture submissions and approvals",details:"Added a submission form for username and image URL, plus an owner-only review queue to approve or reject pictures.",tag:"Feature"},
+ {title:"Custom purple YeepsHub logo",details:"Updated the YeepsHub wordmark with a custom purple Y mark.",tag:"Design"}
+];
+let entries;try{entries=JSON.parse(localStorage.getItem("yeepshub_updates_board")||"null")}catch(e){entries=null}
+if(!Array.isArray(entries))entries=original.slice();
+const list=document.getElementById("updates");
+function render(){list.innerHTML="";entries.slice(0,5).forEach((u,i)=>{const card=document.createElement("article");card.className="item";const tag=document.createElement("span");tag.className="tag";tag.textContent=u.tag||"Update";const h=document.createElement("h3");h.textContent=(i+1)+". "+u.title;const p=document.createElement("p");p.textContent=u.details;card.append(tag,h,p);list.append(card)})}
+function save(){entries=entries.slice(0,5);localStorage.setItem("yeepshub_updates_board",JSON.stringify(entries));render()}
+document.getElementById("save").addEventListener("click",()=>{const title=document.getElementById("title").value.trim(),details=document.getElementById("details").value.trim();if(!title||!details){alert("Enter both a title and details.");return}entries.unshift({title,details,tag:"New"});save();document.getElementById("title").value="";document.getElementById("details").value=""});
+document.getElementById("reset").addEventListener("click",()=>{if(!confirm("Restore the original five updates?"))return;entries=original.slice();save()});
+render();
+</script></body></html>

@@ -507,7 +507,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.52</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.53</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -582,6 +582,7 @@ footer{
 
  <div class="admin" id="admin">
   <button class="action" id="addBtn">＋ Add Player</button>
+  <button class="action" id="undoChangeBtn" type="button">↶ Reset Last Change</button>
   <button class="action" id="exportBtn">Export Backup</button>
   <button class="action" id="resetBtn">Reset Original List</button>
   <button class="action" id="reviewPicturesBtn">Review Picture Submissions</button>
@@ -946,6 +947,34 @@ function save(){
  localStorage.setItem("yeepshub_players",JSON.stringify(players));
 }
 
+/* Keep one owner-reversible snapshot of the directory before its latest edit. */
+const LAST_CHANGE_KEY="yeepshub_last_change";
+function captureLastChange(){
+ localStorage.setItem(LAST_CHANGE_KEY,JSON.stringify(players));
+ updateUndoButton();
+}
+function updateUndoButton(){
+ const btn=document.getElementById("undoChangeBtn");
+ if(!btn)return;
+ const available=!!localStorage.getItem(LAST_CHANGE_KEY);
+ btn.disabled=!owner||!available;
+ btn.style.opacity=available&&owner?"1":".55";
+ btn.title=available?"Undo the most recent directory change":"No previous directory change to undo";
+}
+function resetLastChange(){
+ if(!owner)return;
+ const previous=localStorage.getItem(LAST_CHANGE_KEY);
+ if(!previous){alert("There is no previous change to undo.");updateUndoButton();return;}
+ if(!confirm("Undo the most recent directory change? This restores the player list from immediately before that edit."))return;
+ try{
+  players=JSON.parse(previous);
+  localStorage.removeItem(LAST_CHANGE_KEY);
+  save();
+  updateUndoButton();
+  render();
+ }catch(error){alert("Could not restore the previous change. The saved backup may be invalid.");}
+}
+
 function esc(value){
  return String(value).replace(/[&<>"']/g,c=>({
   "&":"&amp;","<":"&lt;",">":"&gt;",
@@ -1141,7 +1170,7 @@ if(localStorage.getItem("yeepshub_theme")==="light"){
 }
 
 /* EMAIL-ONLY OWNER AUTH */
-function setOwnerMode(ok){owner=ok;document.getElementById("ownerBtn").textContent=ok?"Lock Dashboard":"Owner Login";document.getElementById("admin").classList.toggle("show",ok);document.getElementById("pictureReview").style.display="none";render();if(ok)loadPictureSubmissions();}
+function setOwnerMode(ok){owner=ok;document.getElementById("ownerBtn").textContent=ok?"Lock Dashboard":"Owner Login";document.getElementById("admin").classList.toggle("show",ok);document.getElementById("pictureReview").style.display="none";updateUndoButton();render();if(ok)loadPictureSubmissions();}
 document.getElementById("ownerBtn").onclick=async()=>{if(owner){if(supabaseClient)await supabaseClient.auth.signOut();setOwnerMode(false);}else{document.getElementById("loginError").textContent="";openModal("loginModal");}};
 document.getElementById("loginSubmit").onclick=async()=>{const e=document.getElementById("loginError");if(!supabaseReady){e.textContent="Backend setup is unfinished. Configure supabase-config.js first.";return;}const btn=document.getElementById("loginSubmit");btn.disabled=true;const {error}=await supabaseClient.auth.signInWithOtp({email:OWNER_EMAIL,options:{emailRedirectTo:location.origin+location.pathname}});btn.disabled=false;e.textContent=error?error.message:"Sign-in link sent. Check your email.";};
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(async(_event,session)=>{const email=session?.user?.email?.toLowerCase();if(email===OWNER_EMAIL){setOwnerMode(true);closeModal("loginModal");}else if(session){await supabaseClient.auth.signOut();setOwnerMode(false);document.getElementById("loginError").textContent="This email is not authorized.";}else setOwnerMode(false);});supabaseClient.auth.getSession().then(({data})=>{if(data.session?.user?.email?.toLowerCase()===OWNER_EMAIL)setOwnerMode(true);});}
@@ -1235,6 +1264,7 @@ function openEditor(index=null){
 
   document.getElementById("deletePlayer").onclick=()=>{
    if(confirm("Delete this player?")){
+    captureLastChange();
     players.splice(index,1);
     save();
     closeModal("editModal");
@@ -1262,6 +1292,7 @@ document.getElementById("savePlayer").onclick=()=>{
 
  const player={name,roles};
 
+ captureLastChange();
  if(editing===null){
   players.push(player);
  }else{
@@ -1312,8 +1343,12 @@ document.getElementById("exportBtn").onclick=()=>{
 
 /* RESET */
 
+document.getElementById("undoChangeBtn").onclick=resetLastChange;
+updateUndoButton();
+
 document.getElementById("resetBtn").onclick=()=>{
- if(confirm("Reset the directory to its original starter list?")){
+ if(owner&&confirm("Reset the directory to its original starter list?")){
+  captureLastChange();
   players=structuredClone(INITIAL);
   save();
   render();

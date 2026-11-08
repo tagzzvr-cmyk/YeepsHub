@@ -507,7 +507,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.50</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.51</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -874,6 +874,14 @@ const REMOVED_STAR_MEMBERS = ["Kade","N1CS"];
 for(const name of REMOVED_STAR_MEMBERS){
  const player=players.find(p=>p.name.toLowerCase()===name.toLowerCase());
  if(player)player.roles=player.roles.filter(role=>role!=="Star Program"&&role!=="Star Creator");
+}
+/* PRIME MODERATOR ROSTER: merge into saved browser data too. */
+const PRIME_MODERATOR_ROSTER = ["ItsInfinity"];
+for(const name of PRIME_MODERATOR_ROSTER){
+ let player=players.find(p=>p.name.toLowerCase()===name.toLowerCase());
+ if(!player){player={name,roles:[]};players.push(player);}
+ if(!Array.isArray(player.roles))player.roles=[];
+ if(!player.roles.includes("Prime Moderator"))player.roles.push("Prime Moderator");
 }
 /* STAR PROGRAM-ONLY ROSTER
    Add these members to Star Program without assigning Star Creator. */

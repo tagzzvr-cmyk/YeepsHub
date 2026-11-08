@@ -227,10 +227,14 @@ h1 span{color:var(--accent)}
  position:relative;display:block;width:76px;height:68px;margin:0 auto 7px;
 }
 .prime-moderator-logo img{
- display:block;width:100%;height:100%;object-fit:contain;
- /* Shift the blue Game Moderator shield toward a deeper violet, not magenta. */
- filter:hue-rotate(48deg) saturate(1.75) brightness(.94)
-  drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
+ display:block;width:100%;height:100%;object-fit:contain;opacity:0;
+}
+.prime-moderator-logo::before{
+ content:"";position:absolute;inset:0;
+ background:#7650D8;
+ -webkit-mask:url("assets/shield_blue_cutout.png") center/contain no-repeat;
+ mask:url("assets/shield_blue_cutout.png") center/contain no-repeat;
+ filter:drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
   drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
 }
 .prime-moderator-logo::after{
@@ -493,7 +497,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.32</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.33</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -640,7 +644,7 @@ footer{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js?v=133"></script>
+<script src="./supabase-config.js?v=134"></script>
 <script>
 /* ======================================
    YEEPSHUB PLAYER DATA

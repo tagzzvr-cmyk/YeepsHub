@@ -507,7 +507,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.51</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.52</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -960,6 +960,12 @@ function searchableName(name){
   .toLowerCase();
 }
 
+/* Profile pictures must match the full username. Do not strip punctuation
+   or spaces here: different Yeeps usernames can otherwise collide. */
+function profilePictureKey(name){
+ return String(name).trim().normalize("NFKC").toLocaleLowerCase("en-US");
+}
+
 function avatarInitial(name){
  return searchableName(name).match(/[a-z0-9]/)?.[0].toUpperCase()||"?";
 }
@@ -1080,8 +1086,8 @@ function render(){
  host.innerHTML=visible.map(p=>`
   <article class="player">
    <div class="player-top">
-    ${profilePictures[searchableName(p.name)]
-     ?`<img class="avatar-image" src="${esc(profilePictures[searchableName(p.name)])}" alt="${esc(p.name)} profile picture" loading="lazy">`
+    ${profilePictures[profilePictureKey(p.name)]
+     ?`<img class="avatar-image" src="${esc(profilePictures[profilePictureKey(p.name)])}" alt="${esc(p.name)} profile picture" loading="lazy">`
      :`<div class="avatar">${esc(avatarInitial(p.name))}</div>`}
     <div style="min-width:0;flex:1">
      <div class="player-name">${esc(p.name)}</div>
@@ -1151,7 +1157,7 @@ async function loadApprovedPictures(){
  const {data,error}=await supabaseClient.from("player_profile_pictures").select("username,image_url");
  if(error)return;
  profilePictures={};
- (data||[]).forEach(row=>profilePictures[searchableName(row.username)]=row.image_url);
+ (data||[]).forEach(row=>profilePictures[profilePictureKey(row.username)]=row.image_url);
  render();
 }
 async function submitProfilePicture(){

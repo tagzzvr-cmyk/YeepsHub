@@ -234,7 +234,7 @@ h1 span{color:var(--accent)}
 .prime-moderator-logo::before{content:none;}
 .prime-moderator-logo::after{
  content:"";position:absolute;left:50%;top:50%;
- width:12px;height:12px;transform:translate(-50%,-50%);
+ width:20px;height:20px;transform:translate(-50%,-50%);
  background:#fff;
  clip-path:polygon(50% 0%,61.8% 35.5%,100% 38.2%,70.9% 62.5%,79.4% 100%,50% 78%,20.6% 100%,29.1% 62.5%,0% 38.2%,38.2% 35.5%);
 }
@@ -244,7 +244,7 @@ h1 span{color:var(--accent)}
   drop-shadow(0 .6px 0 #fff) drop-shadow(0 -.6px 0 #fff);
 }
 .badge .prime-moderator-logo::after{
- width:6px;height:6px;
+ width:9px;height:9px;
 }
 .role-fallback{
  width:70px;height:58px;display:grid;place-items:center;font-size:32px;
@@ -499,7 +499,7 @@ footer{
 <body>
 
 <header>
- <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.41</small></div>
+ <div class="brand"><span class="brand-mark" aria-hidden="true">Y</span><span class="brand-name">Yeeps<span>Hub</span></span><small class="version-tag">v1.42</small></div>
 
  <nav id="nav">
   <button class="active" data-role="All">All Players</button>
@@ -901,7 +901,7 @@ function roleLogoPath(role){
 
 function roleLogoMarkup(role, className="role-logo"){
  if(role==="Prime Moderator"){
-  return `<span class="${className} prime-moderator-logo" role="img" aria-label="Prime Moderator logo"><img src="./assets/shield_blue_cutout.png?v=prime141" alt=""></span>`;
+  return `<span class="${className} prime-moderator-logo" role="img" aria-label="Prime Moderator logo"><img src="./assets/shield_blue_cutout.png?v=prime142" alt=""></span>`;
  }
  const src=roleLogoPath(role);
  return src?`<img class="${className}" src="./${src}?v=20261107-rolelabels1" alt="${esc(role)} logo" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/tagzzvr-cmyk/YeepsHub/main/${src}'">`:"";
